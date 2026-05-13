@@ -1,5 +1,5 @@
-"use client";
-
+// No "use client" — StarDisplay is server-safe (pure JSX).
+// StarPicker uses useState but is always rendered inside a "use client" parent (ReviewModal).
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";

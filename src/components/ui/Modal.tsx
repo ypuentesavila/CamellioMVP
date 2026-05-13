@@ -1,5 +1,5 @@
-"use client";
-
+// No "use client" — always rendered inside a "use client" parent (ApplyModal / ReviewModal).
+// React propagates client context through the tree, so useEffect and framer-motion work correctly.
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 

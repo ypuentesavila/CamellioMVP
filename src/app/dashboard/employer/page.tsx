@@ -41,50 +41,9 @@ const employer = {
   jobsPosted: 6,
 };
 
-const stats = {
-  published: 3,
-  activeHires: 1,
-  pendingApplicants: 3,
-};
+// stats.published is derived from publishedJobs.length inside the component
 
-const publishedJobs = [
-  {
-    id: "j2",
-    title: "Instalación de 3 tomacorrientes en local",
-    category: "Electricidad",
-    status: "open" as const,
-    urgency: "this_week" as const,
-    budgetMin: 150000,
-    budgetMax: 220000,
-    offerCount: 1,
-    location: "Chapinero",
-    createdAt: "2026-05-08T10:00:00Z",
-  },
-  {
-    id: "j5",
-    title: "Puerta corrediza de madera atascada",
-    category: "Carpintería",
-    status: "open" as const,
-    urgency: "this_week" as const,
-    budgetMin: 80000,
-    budgetMax: 200000,
-    offerCount: 2,
-    location: "Chapinero",
-    createdAt: "2026-05-07T11:45:00Z",
-  },
-  {
-    id: "j10",
-    title: "Reparación de tubería rota en baño",
-    category: "Plomería",
-    status: "completed" as const,
-    urgency: "urgent" as const,
-    budgetMin: 90000,
-    budgetMax: 160000,
-    offerCount: 1,
-    location: "Chapinero",
-    createdAt: "2026-04-12T08:00:00Z",
-  },
-];
+// publishedJobs is now derived from useJobs() context inside the component (typed as Job[])
 
 const applicants = [
   {
@@ -239,7 +198,10 @@ function StarRow({ rating }: { rating: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function EmployerDashboardPage() {
-  const { getReviewsByJob, getReviewsByWorker, hasReviewed, offers } = useJobs();
+  const { jobs, getReviewsByJob, hasReviewed, offers } = useJobs();
+
+  // Real jobs from context typed as Job[] — fixes TS2339 on acceptedOfferId / updatedAt
+  const publishedJobs = jobs.filter((j) => j.employerId === employer.id);
 
   // ReviewModal state: { jobId, jobTitle, offerId, targetId, targetName }
   const [reviewTarget, setReviewTarget] = useState<{
@@ -319,20 +281,20 @@ export default function EmployerDashboardPage() {
           <StatCard
             icon={Briefcase}
             label="Publicados"
-            value={String(stats.published)}
+            value={String(publishedJobs.length)}
             variant="primary"
           />
           <StatCard
             icon={Users}
             label="Postulantes"
-            value={String(stats.pendingApplicants)}
+            value={String(applicants.filter((a) => a.status === "pending" || a.status === "negotiating").length)}
             sub="pendientes"
             variant="warning"
           />
           <StatCard
             icon={CheckCircle}
             label="Activos"
-            value={String(stats.activeHires)}
+            value={String(activeHires.length)}
             variant="success"
           />
         </div>
@@ -394,7 +356,7 @@ export default function EmployerDashboardPage() {
                   </div>
                   <span className="text-border">·</span>
                   <span className="font-semibold text-primary">
-                    {formatCOPShort(job.budgetMin)}–{formatCOPShort(job.budgetMax)}
+                    {formatCOPShort(job.budget.min)}–{formatCOPShort(job.budget.max)}
                   </span>
                   <span className="text-border">·</span>
                   <span>{timeAgo(job.createdAt)}</span>
