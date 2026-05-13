@@ -61,8 +61,9 @@ export default function ExplorarPage() {
           </div>
         </PageShell>
 
-        {/* Category chips */}
-        <div className="flex gap-2 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-3 scrollbar-hide">
+        {/* Category chips — outer div centers to match PageShell, inner holds scroll content */}
+        <div className="max-w-7xl mx-auto overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 px-4 sm:px-6 lg:px-8 pb-3 w-max">
           <button
             onClick={() => setActiveCategory(null)}
             className={cn(
@@ -93,6 +94,7 @@ export default function ExplorarPage() {
               {cat.name}
             </button>
           ))}
+        </div>
         </div>
       </div>
 

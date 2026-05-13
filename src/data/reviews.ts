@@ -41,6 +41,16 @@ export const reviews: Review[] = [
     comment: "Tomás fue muy amable y la casa estaba en buen estado. Pagó puntual y me facilitó el acceso sin problemas. Empleador recomendado.",
     createdAt: "2026-04-22T19:00:00Z",
   },
+  {
+    id: "r5",
+    jobId: "j10",
+    offerId: "o10",
+    authorId: "u1",
+    targetId: "u8",
+    rating: 5,
+    comment: "Juan Pablo explicó muy bien el problema desde el inicio, pagó el precio acordado sin regatear y fue muy amable durante todo el trabajo. Lo recomiendo totalmente como empleador.",
+    createdAt: "2026-04-14T19:30:00Z",
+  },
 ];
 
 export function getReviewsByWorker(workerId: string): Review[] {

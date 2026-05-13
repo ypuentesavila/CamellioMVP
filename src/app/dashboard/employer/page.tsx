@@ -200,7 +200,7 @@ function StarRow({ rating }: { rating: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function EmployerDashboardPage() {
-  const { jobs, getReviewsByJob, hasReviewed, offers } = useJobs();
+  const { jobs, getReviewsByJob, getReviewsByWorker, hasReviewed, offers } = useJobs();
 
   // Real jobs from context typed as Job[] — fixes TS2339 on acceptedOfferId / updatedAt
   const publishedJobs = jobs.filter((j) => j.employerId === employer.id);
@@ -219,6 +219,9 @@ export default function EmployerDashboardPage() {
 
   // Real reviews given by this employer (across all their completed jobs)
   const realReviews = publishedJobs.flatMap((j) => getReviewsByJob(j.id));
+
+  // Reviews received by this employer from workers
+  const receivedReviews = getReviewsByWorker(EMPLOYER_ID);
 
   if (loading) {
     return (
@@ -266,13 +269,7 @@ export default function EmployerDashboardPage() {
                 </div>
               )}
             </div>
-            <div className="flex flex-col items-end gap-3 shrink-0">
-              <Avatar name={employer.name} size="xl" />
-              <Button variant="primary" size="sm">
-                <Plus className="w-4 h-4" />
-                Publicar trabajo
-              </Button>
-            </div>
+            <Avatar name={employer.name} size="xl" className="shrink-0" />
           </div>
         </PageShell>
       </div>
@@ -602,6 +599,67 @@ export default function EmployerDashboardPage() {
               </div>
             );
           })}
+        </div>
+      </PageShell>
+
+      {/* ── Reviews received (from workers) ── */}
+      <PageShell className="mt-7">
+        <SectionHeader
+          title="Calificaciones recibidas"
+          count={receivedReviews.length}
+        />
+        <div className="flex flex-col gap-3">
+          {receivedReviews.length === 0 ? (
+            <div className="bg-surface rounded-xl border border-dashed border-border p-8 text-center">
+              <Star className="w-8 h-8 text-border mx-auto mb-2" />
+              <p className="text-sm text-text-secondary">
+                Aún no tienes calificaciones
+              </p>
+              <p className="text-xs text-text-secondary mt-1">
+                Los trabajadores podrán calificarte al completar un trabajo
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Average badge */}
+              <div className="flex items-center gap-3 p-4 bg-surface rounded-xl shadow-card border border-border">
+                <div className="flex items-center gap-1.5">
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const avg = receivedReviews.reduce((s, r) => s + r.rating, 0) / receivedReviews.length;
+                    return (
+                      <Star
+                        key={i}
+                        className={`w-5 h-5 ${i < Math.round(avg) ? "fill-accent text-accent" : "text-border"}`}
+                      />
+                    );
+                  })}
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-text-primary leading-none">
+                    {(receivedReviews.reduce((s, r) => s + r.rating, 0) / receivedReviews.length).toFixed(1)}
+                  </p>
+                  <p className="text-xs text-text-secondary mt-0.5">
+                    {receivedReviews.length} calificación{receivedReviews.length !== 1 ? "es" : ""} de trabajadores
+                  </p>
+                </div>
+              </div>
+              {receivedReviews.map((review) => {
+                const author = getUserById(review.authorId);
+                const job = publishedJobs.find((j) => j.id === review.jobId);
+                return (
+                  <ReviewCard
+                    key={review.id}
+                    rating={review.rating}
+                    comment={review.comment}
+                    createdAt={review.createdAt}
+                    authorName={author?.name ?? "Trabajador"}
+                    authorRole="worker"
+                    jobTitle={job?.title}
+                  />
+                );
+              })}
+            </>
+          )}
         </div>
       </PageShell>
 

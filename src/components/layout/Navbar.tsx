@@ -72,7 +72,10 @@ export function Navbar() {
                   </Link>
                 )}
                 {/* User pill */}
-                <div className="flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-xl hover:bg-background transition-colors cursor-pointer">
+                <Link
+                  href={`/perfil/${user.id}`}
+                  className="flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-xl hover:bg-background transition-colors"
+                >
                   <Avatar name={user.name} size="sm" />
                   <div className="flex flex-col">
                     <span className="text-sm font-semibold text-text-primary leading-none">
@@ -82,7 +85,7 @@ export function Navbar() {
                       {user.role === "worker" ? "Trabajador" : "Empleador"}
                     </span>
                   </div>
-                </div>
+                </Link>
               </>
             ) : (
               <>
@@ -105,7 +108,9 @@ export function Navbar() {
           {/* Mobile right */}
           <div className="md:hidden flex items-center gap-2">
             {isAuthenticated && user && (
-              <Avatar name={user.name} size="sm" />
+              <Link href={`/perfil/${user.id}`}>
+                <Avatar name={user.name} size="sm" />
+              </Link>
             )}
             <button
               className="flex items-center justify-center h-10 w-10 rounded-xl hover:bg-background transition-colors"

@@ -197,7 +197,8 @@ export default function WorkerDashboardPage() {
             />
           </PageShell>
         ) : (
-          <div className="flex gap-3 overflow-x-auto px-4 sm:px-6 lg:px-8 pb-3 snap-x snap-mandatory scrollbar-hide">
+          <div className="max-w-7xl mx-auto overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+          <div className="flex gap-3 px-4 sm:px-6 lg:px-8 pb-3 w-max">
             {openJobs.map((job) => (
               <JobCard
                 key={job.id}
@@ -206,6 +207,7 @@ export default function WorkerDashboardPage() {
                 onApply={setSelectedJob}
               />
             ))}
+          </div>
           </div>
         )}
       </div>
