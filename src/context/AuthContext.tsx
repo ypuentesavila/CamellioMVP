@@ -18,17 +18,19 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === "undefined") return null;
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) return null;
+      if (!stored) return;
       const { userId } = JSON.parse(stored);
-      return getUserById(userId) ?? null;
+      const found = getUserById(userId);
+      if (found) setUser(found);
     } catch {
-      return null;
+      // ignore
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (user) {

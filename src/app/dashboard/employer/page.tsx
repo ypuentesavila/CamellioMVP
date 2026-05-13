@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   MapPin,
   Briefcase,
@@ -96,6 +97,7 @@ const applicants = [
 const activeHires = [
   {
     id: "hire-1",
+    jobId: "j10",
     jobTitle: "Reparación tubería rota en baño",
     workerName: "Carlos Mendoza",
     workerCategory: "Plomero",
@@ -373,13 +375,17 @@ export default function EmployerDashboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     {job.status === "open" && job.offerCount > 0 && (
-                      <Button variant="primary" size="sm">
-                        Ver postulantes
-                      </Button>
+                      <Link href={`/trabajos/${job.id}`}>
+                        <Button variant="primary" size="sm">
+                          Ver postulantes
+                        </Button>
+                      </Link>
                     )}
-                    <Button variant="ghost" size="sm">
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
+                    <Link href={`/trabajos/${job.id}`}>
+                      <Button variant="ghost" size="sm">
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -493,7 +499,7 @@ export default function EmployerDashboardPage() {
         <SectionHeader
           title="Contrataciones activas"
           count={activeHires.length}
-          action={{ label: "Ver todas", href: "/dashboard/employer/hires" }}
+          action={{ label: "Ver todas", href: "/dashboard/employer/applicants" }}
         />
 
         {activeHires.length === 0 ? (
@@ -543,13 +549,17 @@ export default function EmployerDashboardPage() {
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
-                  <Button variant="secondary" size="sm">
-                    Ver detalles
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <MessageSquare className="w-4 h-4" />
-                    Chat
-                  </Button>
+                  <Link href={`/trabajos/${hire.jobId ?? "j10"}`}>
+                    <Button variant="secondary" size="sm">
+                      Ver detalles
+                    </Button>
+                  </Link>
+                  <Link href="/mensajes">
+                    <Button variant="ghost" size="sm">
+                      <MessageSquare className="w-4 h-4" />
+                      Chat
+                    </Button>
+                  </Link>
                   <Button variant="ghost" size="sm" className="ml-auto text-success">
                     <CheckCircle className="w-4 h-4" />
                     Completar
@@ -600,7 +610,7 @@ export default function EmployerDashboardPage() {
         <SectionHeader
           title="Reseñas que dejé"
           count={realReviews.length}
-          action={{ label: "Ver todas", href: "/dashboard/employer/reviews" }}
+          action={{ label: "Ver todas", href: "/perfil/u8" }}
         />
 
         <div className="flex flex-col gap-3">
@@ -643,7 +653,7 @@ export default function EmployerDashboardPage() {
                       ¿Cómo te fue con {worker.name.split(" ")[0]}?
                     </p>
                     <p className="text-xs text-text-secondary mt-0.5 truncate">
-                      {j.title} · {timeAgo(j.updatedAt)}
+                      {j.title} · {timeAgo(j.createdAt)}
                     </p>
                   </div>
                   <Button

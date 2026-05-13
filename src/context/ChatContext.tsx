@@ -48,12 +48,13 @@ interface ChatContextValue {
 const ChatContext = createContext<ChatContextValue | null>(null);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const [chats, setChats] = useState<Chat[]>(() =>
-    loadFromStorage(CHATS_KEY, mockChats)
-  );
-  const [messages, setMessages] = useState<Message[]>(() =>
-    loadFromStorage(MESSAGES_KEY, mockMessages)
-  );
+  const [chats, setChats] = useState<Chat[]>(mockChats);
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
+
+  useEffect(() => {
+    setChats(loadFromStorage(CHATS_KEY, mockChats));
+    setMessages(loadFromStorage(MESSAGES_KEY, mockMessages));
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(CHATS_KEY, JSON.stringify(chats));

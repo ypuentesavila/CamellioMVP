@@ -80,15 +80,15 @@ interface JobContextValue {
 const JobContext = createContext<JobContextValue | null>(null);
 
 export function JobProvider({ children }: { children: React.ReactNode }) {
-  const [jobs, setJobs] = useState<Job[]>(() =>
-    loadFromStorage(JOBS_KEY, mockJobs)
-  );
-  const [offers, setOffers] = useState<Offer[]>(() =>
-    loadFromStorage(OFFERS_KEY, mockOffers)
-  );
-  const [reviews, setReviews] = useState<Review[]>(() =>
-    loadFromStorage(REVIEWS_KEY, mockReviews)
-  );
+  const [jobs, setJobs] = useState<Job[]>(mockJobs);
+  const [offers, setOffers] = useState<Offer[]>(mockOffers);
+  const [reviews, setReviews] = useState<Review[]>(mockReviews);
+
+  useEffect(() => {
+    setJobs(loadFromStorage(JOBS_KEY, mockJobs));
+    setOffers(loadFromStorage(OFFERS_KEY, mockOffers));
+    setReviews(loadFromStorage(REVIEWS_KEY, mockReviews));
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));

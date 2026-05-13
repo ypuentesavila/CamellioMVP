@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Search,
 } from "lucide-react";
+import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { PageShell } from "@/components/layout/PageShell";
@@ -46,6 +47,7 @@ const WORKER_DEMO = {
 
 const activeJobs = [
   {
+    jobId: "j10",
     id: "j10-active",
     title: "Reparación de tubería rota en baño",
     employer: "Juan Pablo Restrepo",
@@ -213,7 +215,7 @@ export default function WorkerDashboardPage() {
         <SectionHeader
           title="Trabajos activos"
           count={activeJobs.length}
-          action={{ label: "Ver todos", href: "/dashboard/worker/jobs" }}
+          action={{ label: "Ver todos", href: "/explorar" }}
         />
 
         {activeJobs.length === 0 ? (
@@ -247,13 +249,17 @@ export default function WorkerDashboardPage() {
                   </Badge>
                 </div>
                 <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
-                  <Button variant="secondary" size="sm">
-                    Ver detalles
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <MessageSquare className="w-4 h-4" />
-                    Chat
-                  </Button>
+                  <Link href={`/trabajos/${job.jobId ?? job.id}`}>
+                    <Button variant="secondary" size="sm">
+                      Ver detalles
+                    </Button>
+                  </Link>
+                  <Link href={`/mensajes/${job.chatId}`}>
+                    <Button variant="ghost" size="sm">
+                      <MessageSquare className="w-4 h-4" />
+                      Chat
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -326,7 +332,7 @@ export default function WorkerDashboardPage() {
       <PageShell className="mt-7">
         <SectionHeader
           title="Resumen de ingresos"
-          action={{ label: "Ver detalle", href: "/dashboard/worker/earnings" }}
+          action={{ label: "Ver detalle", href: "/dashboard/worker" }}
         />
         <div className="bg-surface rounded-xl p-5 shadow-card border border-border">
           <div className="grid grid-cols-2 gap-4">
@@ -357,7 +363,7 @@ export default function WorkerDashboardPage() {
         <SectionHeader
           title="Mis reseñas"
           count={workerReviews.length}
-          action={{ label: "Ver todas", href: "/dashboard/worker/reviews" }}
+          action={{ label: "Ver todas", href: "/perfil/u1" }}
         />
         <div className="flex flex-col gap-3">
           {/* Aggregate summary */}

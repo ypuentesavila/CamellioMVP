@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MapPin, Users, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
@@ -39,15 +40,8 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
   const urgency = urgencyConfig[job.urgency];
   const isCompact = variant === "compact";
 
-  return (
-    <div
-      className={cn(
-        "bg-surface rounded-xl border border-border shadow-card card-hover",
-        isCompact
-          ? "flex-shrink-0 w-64 snap-start p-4"
-          : "w-full p-5"
-      )}
-    >
+  const cardContent = (
+    <>
       {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <Badge variant={urgency.variant} size="sm">
@@ -59,16 +53,9 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
       </div>
 
       {/* Title */}
-      <h3
-        className={cn(
-          "font-semibold text-text-primary leading-snug",
-          isCompact ? "text-sm" : "text-base"
-        )}
-      >
+      <h3 className={cn("font-semibold text-text-primary leading-snug", isCompact ? "text-sm" : "text-base")}>
         {isCompact
-          ? job.title.length > 48
-            ? job.title.slice(0, 48) + "…"
-            : job.title
+          ? job.title.length > 48 ? job.title.slice(0, 48) + "…" : job.title
           : job.title}
       </h3>
 
@@ -96,26 +83,65 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
           </span>
         </div>
 
-        {isWorker && (
-          existingOffer ? (
-            <Badge
-              variant={offerStatusBadge[existingOffer.status].variant}
-              dot={offerStatusBadge[existingOffer.status].dot}
-              size="sm"
+        <div className="flex items-center gap-2">
+          {/* Always show details link on full variant */}
+          {!isCompact && (
+            <Link
+              href={`/trabajos/${job.id}`}
+              className="text-xs text-text-secondary hover:text-text-primary transition-colors"
+              onClick={(e) => e.stopPropagation()}
             >
-              {offerStatusBadge[existingOffer.status].label}
-            </Badge>
-          ) : (
-            <button
-              onClick={() => onApply?.(job)}
-              className="flex items-center gap-0.5 text-xs font-semibold text-primary hover:gap-1.5 transition-all duration-150"
-            >
-              Postularme
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          )
-        )}
+              Ver detalles
+            </Link>
+          )}
+
+          {isWorker && (
+            existingOffer ? (
+              <Badge
+                variant={offerStatusBadge[existingOffer.status].variant}
+                dot={offerStatusBadge[existingOffer.status].dot}
+                size="sm"
+              >
+                {offerStatusBadge[existingOffer.status].label}
+              </Badge>
+            ) : (
+              <button
+                onClick={(e) => { e.stopPropagation(); e.preventDefault(); onApply?.(job); }}
+                className="flex items-center gap-0.5 text-xs font-semibold text-primary hover:gap-1.5 transition-all duration-150"
+              >
+                Postularme
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            )
+          )}
+
+          {/* Compact: show details arrow */}
+          {isCompact && !isWorker && (
+            <ChevronRight className="w-3.5 h-3.5 text-border" />
+          )}
+        </div>
       </div>
+    </>
+  );
+
+  // Compact cards are wrapped in a Link to navigate to job detail
+  if (isCompact) {
+    return (
+      <Link
+        href={`/trabajos/${job.id}`}
+        className={cn(
+          "block bg-surface rounded-xl border border-border shadow-card card-hover",
+          "flex-shrink-0 w-64 snap-start p-4"
+        )}
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="bg-surface rounded-xl border border-border shadow-card w-full p-5 card-hover">
+      {cardContent}
     </div>
   );
 }
