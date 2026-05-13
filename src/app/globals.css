@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Typography scale */
+  .text-display {
+    @apply text-4xl font-bold tracking-tight leading-tight sm:text-5xl lg:text-6xl;
+  }
+
+  .text-h1 {
+    @apply text-3xl font-bold tracking-tight leading-tight sm:text-4xl;
+  }
+
+  .text-h2 {
+    @apply text-2xl font-bold tracking-tight leading-snug;
+  }
+
+  .text-h3 {
+    @apply text-xl font-bold leading-snug;
+  }
+
+  .text-h4 {
+    @apply text-lg font-semibold leading-normal;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed text-text-primary;
+  }
+
+  .text-body-sm {
+    @apply text-sm leading-relaxed text-text-secondary;
+  }
+
+  .text-caption {
+    @apply text-xs text-text-secondary leading-normal;
+  }
+
+  /* Card hover lift */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Safe area bottom padding for mobile nav */
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  .section-sm {
+    @apply py-8 sm:py-12;
+  }
+
+  /* Hide scrollbar — horizontal snap lists */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s ease-out both;
+}
