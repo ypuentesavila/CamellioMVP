@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
 import { PageShell } from "@/components/layout/PageShell";
 import { Avatar } from "@/components/ui/Avatar";
@@ -86,6 +86,13 @@ export function Navbar() {
                     </span>
                   </div>
                 </Link>
+                <button
+                  onClick={logout}
+                  title="Cerrar sesión"
+                  className="flex items-center justify-center h-9 w-9 rounded-xl hover:bg-paper text-stone-400 hover:text-ink transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </>
             ) : (
               <>

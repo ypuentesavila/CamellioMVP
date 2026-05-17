@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Sparkles, ArrowRight, ShieldCheck, Award, Quote } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, Quote, MapPin } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileFooter } from "@/components/layout/MobileFooter";
@@ -106,14 +106,14 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-paper">
-      <Header variant="transparent" />
+      <Header />
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       <section className="pt-28 pb-16 px-4 max-w-2xl mx-auto text-left sm:text-center sm:mx-auto">
         {/* AI chip */}
         <div className="inline-flex items-center gap-1.5 bg-azulejo-100 text-azulejo-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
-          <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
-          Conectado por IA · Bogotá
+          <MapPin className="w-3.5 h-3.5" strokeWidth={2} />
+          Trabajo local, confianza real
         </div>
 
         <h1 className="text-[2.5rem] sm:text-5xl font-bold text-ink tracking-tight leading-[1.08] mb-4">
@@ -129,7 +129,7 @@ export default function LandingPage() {
           <Button
             variant="primary"
             size="lg"
-            onClick={() => router.push("/publicar")}
+            onClick={() => router.push("/registro/cliente")}
           >
             {copy.cta.publishRequest}
           </Button>
@@ -176,7 +176,7 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <div className="flex gap-3 px-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2">
+        <div className="max-w-2xl mx-auto flex gap-3 px-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2">
           {featured.map((w) => {
             const level = verificationLevel(w);
             return (

@@ -141,8 +141,8 @@ export default function ExplorarPage() {
         </div>
 
         {/* Category chips */}
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2 px-4 max-w-2xl mx-auto pb-3 w-max">
+        <div className="max-w-2xl mx-auto overflow-x-auto scrollbar-hide">
+          <div className="flex gap-2 px-4 pb-3 w-max">
             <button
               onClick={() => setActiveCategory(null)}
               className={cn(

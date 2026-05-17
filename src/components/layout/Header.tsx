@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/Logo";
 import { Avatar } from "@/components/ui/Avatar";
@@ -148,10 +149,22 @@ export function Header({ variant = "default" }: HeaderProps) {
                         isTransparent ? "text-paper/60" : "text-stone-500"
                       )}
                     >
-                      {isWorker ? "Trabajador" : "Cliente"}
+                      {isWorker ? "Trabajador" : "Empleador"}
                     </span>
                   </div>
                 </Link>
+                <button
+                  onClick={logout}
+                  title="Cerrar sesión"
+                  className={cn(
+                    "flex items-center justify-center h-9 w-9 rounded-xl transition-colors",
+                    isTransparent
+                      ? "hover:bg-white/10 text-paper/70 hover:text-paper"
+                      : "hover:bg-stone-100 text-stone-400 hover:text-ink"
+                  )}
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
               </>
             ) : (
               <>
@@ -163,13 +176,13 @@ export function Header({ variant = "default" }: HeaderProps) {
                       "border-paper/40 text-paper hover:bg-white/10 hover:border-paper"
                   )}
                 >
-                  Soy trabajador
+                  Únete a Camellio
                 </Link>
                 <Link
-                  href="/publicar"
+                  href="/login"
                   className={cn(buttonVariants({ variant: "primary", size: "sm" }))}
                 >
-                  Publicar solicitud
+                  Iniciar sesión
                 </Link>
               </>
             )}
