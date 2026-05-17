@@ -326,36 +326,32 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA band ───────────────────────────────────────────────────────── */}
+      {/* ── Garantía band ──────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-ink px-4 py-14">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <Mosaico density="sparse" />
+        <div className="absolute inset-0 opacity-[0.12] pointer-events-none">
+          <Mosaico density="dense" />
         </div>
         <div className="relative z-10 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-paper tracking-tight mb-2">
-            ¿Qué necesitas{" "}
-            <span className="serif">resolver?</span>
+          <p className="eyebrow text-marigold-300 mb-3">La promesa</p>
+          <h2 className="text-2xl font-bold text-paper tracking-tight mb-3">
+            Si no queda bien,{" "}
+            <span className="serif text-marigold-300">lo resolvemos.</span>
           </h2>
           <p className="text-sm text-paper/60 mb-8 leading-relaxed">
-            Publica tu solicitud y recibe propuestas de trabajadores verificados en minutos.
+            Cuando contratas un trabajador desde Camellio, queda con garantía de 30 días. Si algo no sale bien, te conectamos con otro sin costo adicional.
           </p>
-          <div className="flex flex-col gap-3">
-            <Button
-              variant="marigold"
-              size="lg"
-              className="w-full"
-              onClick={() => router.push("/publicar")}
-            >
-              {copy.cta.publishRequest}
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full border-paper/30 text-paper hover:bg-paper/10 hover:border-paper/50"
-              onClick={() => router.push("/registro/trabajador")}
-            >
-              {copy.cta.imAWorker}
-            </Button>
+          <div className="grid grid-cols-2 gap-2.5">
+            {[
+              { k: "30 días",   v: "garantía por trabajo" },
+              { k: "100%",      v: "identidad verificada" },
+              { k: "Sin costo", v: "si re-asignamos" },
+              { k: "Mediación", v: "ante cualquier reclamo" },
+            ].map((s) => (
+              <div key={s.k} className="bg-paper/[0.07] border border-paper/[0.12] rounded-2xl p-4">
+                <div className="text-xl font-bold text-marigold-300 tracking-tight mb-1">{s.k}</div>
+                <div className="text-xs text-paper/60 leading-snug">{s.v}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

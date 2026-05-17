@@ -49,31 +49,6 @@ export function MobileFooter() {
 
   return (
     <footer className="md:hidden bg-ink text-paper">
-      {/* CTA */}
-      <div className="px-4 py-8 flex flex-col gap-3">
-        <p className="text-lg font-bold text-paper tracking-tight">
-          ¿Necesitas resolver algo hoy?
-        </p>
-        <Link
-          href="/publicar"
-          className={cn(
-            buttonVariants({ variant: "marigold", size: "lg" }),
-            "w-full"
-          )}
-        >
-          Publicar solicitud
-        </Link>
-        <Link
-          href="/registro?rol=trabajador"
-          className={cn(
-            "inline-flex items-center justify-center gap-2 rounded-xl font-semibold h-12 px-6 text-base w-full",
-            "border border-paper/30 text-paper hover:bg-paper/10 transition-colors"
-          )}
-        >
-          Soy trabajador
-        </Link>
-      </div>
-
       {/* Accordions */}
       <div className="border-t border-paper/10">
         {SECTIONS.map((section) => {

@@ -38,39 +38,6 @@ const CONTACTO = [
 export function Footer() {
   return (
     <footer className="hidden md:block bg-ink text-paper">
-      {/* CTA band */}
-      <div className="border-b border-paper/10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div>
-              <p className="eyebrow text-paper/50 mb-1">Para clientes</p>
-              <p className="text-2xl font-bold text-paper tracking-tight">
-                ¿Necesitas resolver algo hoy?
-              </p>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <Link
-                href="/publicar"
-                className={cn(
-                  buttonVariants({ variant: "marigold", size: "lg" })
-                )}
-              >
-                Publicar solicitud
-              </Link>
-              <Link
-                href="/registro?rol=trabajador"
-                className={cn(
-                  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold h-12 px-6 text-base",
-                  "border border-paper/30 text-paper hover:bg-paper/10 transition-colors"
-                )}
-              >
-                Soy trabajador
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* 5-column links */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
         <div className="grid grid-cols-5 gap-8">
