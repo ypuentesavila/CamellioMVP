@@ -68,25 +68,26 @@ export function ChatWindow({ chat }: ChatWindowProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full bg-paper">
       {/* ── Header ── */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-surface border-b border-border shrink-0">
+      <div className="flex items-center gap-3 px-4 py-3 bg-card border-b border-stone-200 shrink-0">
         {/* Back button — mobile only */}
         <Link
           href="/mensajes"
-          className="md:hidden p-1.5 -ml-1.5 rounded-lg hover:bg-background transition-colors shrink-0"
+          className="md:hidden -ml-1.5 p-2.5 rounded-xl hover:bg-stone-100 transition-colors shrink-0 min-h-[44px] flex items-center"
+          aria-label="Volver a mensajes"
         >
-          <ArrowLeft className="w-5 h-5 text-text-primary" />
+          <ArrowLeft className="w-5 h-5 text-ink" />
         </Link>
 
         <Avatar name={other?.name ?? "?"} size="md" />
 
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-text-primary text-sm truncate">
+          <p className="font-semibold text-ink text-sm truncate">
             {other?.name ?? "Usuario"}
           </p>
           {job && (
-            <p className="text-xs text-text-secondary truncate">{job.title}</p>
+            <p className="text-xs text-stone-500 truncate">{job.title}</p>
           )}
         </div>
 
@@ -111,8 +112,11 @@ export function ChatWindow({ chat }: ChatWindowProps) {
           </Badge>
         )}
 
-        <button className="p-1.5 rounded-lg hover:bg-background transition-colors shrink-0">
-          <Info className="w-5 h-5 text-text-secondary" />
+        <button
+          className="-mr-1 p-2.5 rounded-xl hover:bg-stone-100 transition-colors shrink-0 min-h-[44px]"
+          aria-label="Detalles del trabajo"
+        >
+          <Info className="w-5 h-5 text-stone-500" />
         </button>
       </div>
 
@@ -121,7 +125,7 @@ export function ChatWindow({ chat }: ChatWindowProps) {
         {/* Date header */}
         {messages.length > 0 && (
           <div className="flex justify-center mb-4">
-            <span className="text-xs text-text-secondary bg-surface border border-border px-3 py-1 rounded-full">
+            <span className="text-xs text-stone-500 bg-card border border-stone-200 px-3 py-1 rounded-full">
               Conversación iniciada
             </span>
           </div>
@@ -129,13 +133,13 @@ export function ChatWindow({ chat }: ChatWindowProps) {
 
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-12">
-            <div className="w-14 h-14 bg-surface rounded-full border border-border flex items-center justify-center mb-3">
+            <div className="w-14 h-14 bg-card rounded-full border border-stone-200 flex items-center justify-center mb-3">
               <Avatar name={other?.name ?? "?"} size="md" />
             </div>
-            <p className="text-sm font-semibold text-text-primary">
+            <p className="text-sm font-semibold text-ink">
               {other?.name}
             </p>
-            <p className="text-xs text-text-secondary mt-1 max-w-xs">
+            <p className="text-xs text-stone-500 mt-1 max-w-xs">
               Sé el primero en escribir. Preséntate y confirma los detalles del trabajo.
             </p>
           </div>
@@ -155,7 +159,7 @@ export function ChatWindow({ chat }: ChatWindowProps) {
       </div>
 
       {/* ── Input ── */}
-      <div className="shrink-0 bg-surface border-t border-border px-4 py-3">
+      <div className="shrink-0 bg-card border-t border-stone-200 px-4 py-3">
         <div className="flex items-end gap-2">
           <textarea
             ref={textareaRef}
@@ -164,18 +168,18 @@ export function ChatWindow({ chat }: ChatWindowProps) {
             onKeyDown={handleKeyDown}
             placeholder="Escribe un mensaje..."
             rows={1}
-            className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-background text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none leading-relaxed"
+            className="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 bg-paper text-sm text-ink placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink transition-colors resize-none leading-relaxed"
           />
           <button
             onClick={handleSend}
             disabled={!input.trim()}
-            className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+            className="w-11 h-11 bg-ink rounded-xl flex items-center justify-center hover:bg-ink/90 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
             aria-label="Enviar mensaje"
           >
-            <Send className="w-4 h-4 text-white" />
+            <Send className="w-4 h-4 text-paper" />
           </button>
         </div>
-        <p className="text-xs text-text-secondary text-center mt-2">
+        <p className="text-xs text-stone-400 text-center mt-2">
           Enter para enviar · Shift+Enter para nueva línea
         </p>
       </div>

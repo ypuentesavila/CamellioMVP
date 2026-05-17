@@ -4,12 +4,13 @@ import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowLeft,
+  ChevronLeft,
   MapPin,
   Clock,
   Users,
   MessageSquare,
   CheckCircle,
+  CheckCircle2,
   Star,
   AlertCircle,
   Zap,
@@ -26,7 +27,6 @@ import { useAuth, useJobs, useChat } from "@/context";
 import { getUserById } from "@/data/users";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { Job } from "@/types";
 
 const urgencyConfig = {
   urgent: { label: "Urgente", variant: "danger" as const, icon: Zap },
@@ -46,7 +46,15 @@ function StarRow({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={cn("w-3.5 h-3.5", i < Math.floor(rating) ? "fill-accent text-accent" : "text-border")} />
+        <Star
+          key={i}
+          className={cn(
+            "w-3.5 h-3.5",
+            i < Math.floor(rating)
+              ? "fill-marigold-300 text-marigold-300"
+              : "text-stone-200"
+          )}
+        />
       ))}
     </div>
   );
@@ -56,7 +64,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const { id } = use(params);
   const router = useRouter();
   const { user, isWorker, isEmployer } = useAuth();
-  const { jobs, offers, acceptOffer, rejectOffer, counterOffer } = useJobs();
+  const { jobs, offers, acceptOffer } = useJobs();
   const { createChat } = useChat();
 
   const [applyOpen, setApplyOpen] = useState(false);
@@ -68,14 +76,14 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
   if (!job) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-paper">
         <Navbar />
         <div className="flex items-center justify-center min-h-[70vh] px-4">
           <EmptyState
             icon={AlertCircle}
             title="Trabajo no encontrado"
             description="Este trabajo no existe o fue eliminado."
-            action={{ label: "Explorar trabajos", href: "/explorar" }}
+            action={{ label: "Explorar trabajadores", href: "/explorar" }}
           />
         </div>
         <BottomNav />
@@ -86,21 +94,15 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const urgency = urgencyConfig[job.urgency];
   const UrgencyIcon = urgency.icon;
 
-  const jobStatusLabel = {
-    open: "Abierto",
-    in_progress: "En progreso",
-    completed: "Completado",
-    cancelled: "Cancelado",
-    draft: "Borrador",
-  }[job.status];
+  const jobStatusLabel: Record<string, string> = {
+    open: "Abierto", in_progress: "En progreso", completed: "Completado",
+    cancelled: "Cancelado", draft: "Borrador",
+  };
 
-  const jobStatusVariant = {
-    open: "success" as const,
-    in_progress: "warning" as const,
-    completed: "neutral" as const,
-    cancelled: "danger" as const,
-    draft: "neutral" as const,
-  }[job.status];
+  const jobStatusVariant: Record<string, "success" | "warning" | "neutral" | "danger"> = {
+    open: "success", in_progress: "warning", completed: "neutral",
+    cancelled: "danger", draft: "neutral",
+  };
 
   function handleOpenChat(workerId: string) {
     if (!user || !job) return;
@@ -109,17 +111,17 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-24">
       <Navbar />
 
-      {/* Back header */}
-      <div className="bg-surface border-b border-border">
+      {/* Back + header */}
+      <div className="bg-card border-b border-stone-200">
         <PageShell className="py-4">
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors mb-3"
+            className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-ink transition-colors mb-3 min-h-[44px] -ml-1 px-1"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4" strokeWidth={2} />
             Volver
           </button>
 
@@ -130,57 +132,55 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   <UrgencyIcon className="w-3 h-3" />
                   {urgency.label}
                 </Badge>
-                <Badge variant={jobStatusVariant} dot size="sm">
-                  {jobStatusLabel}
+                <Badge variant={jobStatusVariant[job.status] ?? "neutral"} dot size="sm">
+                  {jobStatusLabel[job.status] ?? job.status}
                 </Badge>
               </div>
-              <h1 className="text-xl font-bold text-text-primary leading-tight">
-                {job.title}
-              </h1>
-              <div className="flex items-center gap-1.5 mt-1.5 text-text-secondary">
-                <MapPin className="w-3.5 h-3.5 shrink-0" />
+              <h1 className="text-xl font-bold text-ink leading-tight">{job.title}</h1>
+              <div className="flex items-center gap-1.5 mt-1.5 text-stone-400">
+                <MapPin className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
                 <span className="text-sm">{job.location}</span>
-                <span className="text-border">·</span>
+                <span className="text-stone-200">·</span>
                 <span className="text-sm">{timeAgo(job.createdAt)}</span>
               </div>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xl font-bold text-primary">
+              <p className="text-xl font-bold text-ink tnum">
                 {formatCOPShort(job.budget.min)}–{formatCOPShort(job.budget.max)}
               </p>
-              <p className="text-xs text-text-secondary">COP</p>
+              <p className="text-xs text-stone-400">COP</p>
             </div>
           </div>
         </PageShell>
       </div>
 
-      <PageShell className="py-5 max-w-3xl">
-        <div className="flex flex-col gap-6">
+      <PageShell className="py-5 max-w-2xl">
+        <div className="flex flex-col gap-5">
 
           {/* Description */}
-          <div className="bg-surface rounded-xl p-5 shadow-card border border-border">
-            <h2 className="text-sm font-bold text-text-primary mb-3">Descripción</h2>
-            <p className="text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
+          <div className="bg-card rounded-[16px] p-5 border border-stone-200">
+            <h2 className="text-sm font-bold text-ink mb-3">Descripción</h2>
+            <p className="text-sm text-stone-500 leading-relaxed whitespace-pre-wrap">
               {job.description}
             </p>
           </div>
 
-          {/* Budget detail */}
+          {/* Budget */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-surface rounded-xl p-4 shadow-card border border-border text-center">
-              <p className="text-xs text-text-secondary mb-1">Presupuesto mínimo</p>
-              <p className="text-lg font-bold text-text-primary">{formatCOP(job.budget.min)}</p>
+            <div className="bg-card rounded-[16px] p-4 border border-stone-200 text-center">
+              <p className="text-xs text-stone-400 mb-1">Presupuesto mínimo</p>
+              <p className="text-lg font-bold text-ink tnum">{formatCOP(job.budget.min)}</p>
             </div>
-            <div className="bg-primary-light rounded-xl p-4 border border-primary/20 text-center">
-              <p className="text-xs text-primary mb-1">Presupuesto máximo</p>
-              <p className="text-lg font-bold text-primary">{formatCOP(job.budget.max)}</p>
+            <div className="bg-azulejo-100 rounded-[16px] p-4 border border-azulejo-200 text-center">
+              <p className="text-xs text-azulejo-500 mb-1">Presupuesto máximo</p>
+              <p className="text-lg font-bold text-azulejo-600 tnum">{formatCOP(job.budget.max)}</p>
             </div>
           </div>
 
-          {/* Employer info */}
+          {/* Employer */}
           {employer && (
-            <div className="bg-surface rounded-xl p-4 shadow-card border border-border">
-              <h2 className="text-sm font-bold text-text-primary mb-3">Publicado por</h2>
+            <div className="bg-card rounded-[16px] p-4 border border-stone-200">
+              <h2 className="text-sm font-bold text-ink mb-3">Publicado por</h2>
               <Link
                 href={`/perfil/${employer.id}`}
                 className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -188,56 +188,46 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 <Avatar name={employer.name} size="md" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <p className="text-sm font-semibold text-text-primary">{employer.name}</p>
+                    <p className="text-sm font-semibold text-ink">{employer.name}</p>
                     {employer.employerProfile?.verified && (
-                      <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-forest-500" />
                     )}
                   </div>
-                  <p className="text-xs text-text-secondary">
-                    {employer.employerProfile?.companyName ?? "Empleador"}
-                    {" · "}
-                    {employer.location}
+                  <p className="text-xs text-stone-500">
+                    {employer.employerProfile?.companyName ?? "Empleador"} · {employer.location}
                   </p>
-                  <p className="text-xs text-text-secondary mt-0.5">
+                  <p className="text-xs text-stone-400 mt-0.5">
                     {employer.employerProfile?.jobsPosted ?? 0} trabajos publicados
                   </p>
                 </div>
-                <span className="text-xs text-primary font-medium">Ver perfil →</span>
+                <span className="text-xs text-stone-400 font-medium shrink-0">Ver perfil →</span>
               </Link>
             </div>
           )}
 
-          {/* ── Worker: Apply CTA ── */}
+          {/* Worker: apply CTA */}
           {isWorker && job.status === "open" && (
-            <div className="bg-surface rounded-xl p-4 shadow-card border border-border">
+            <div className="bg-card rounded-[16px] p-4 border border-stone-200">
               {myOffer ? (
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">Tu propuesta</p>
-                    <p className="text-xs text-text-secondary mt-0.5">
+                    <p className="text-sm font-semibold text-ink">Tu propuesta</p>
+                    <p className="text-xs text-stone-400 mt-0.5 tnum">
                       {formatCOP(myOffer.proposedPrice)}
                       {myOffer.counterOfferPrice && (
-                        <> → <span className="text-accent font-medium">{formatCOP(myOffer.counterOfferPrice)}</span></>
+                        <> → <span className="text-marigold-400 font-medium">{formatCOP(myOffer.counterOfferPrice)}</span></>
                       )}
                     </p>
                   </div>
-                  <Badge
-                    variant={offerStatusConfig[myOffer.status].variant}
-                    dot
-                    size="sm"
-                  >
+                  <Badge variant={offerStatusConfig[myOffer.status].variant} dot size="sm">
                     {offerStatusConfig[myOffer.status].label}
                   </Badge>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-text-primary">
-                      ¿Te interesa este trabajo?
-                    </p>
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      Envía tu propuesta con tu precio y disponibilidad
-                    </p>
+                    <p className="text-sm font-semibold text-ink">¿Te interesa este trabajo?</p>
+                    <p className="text-xs text-stone-400 mt-0.5">Envía tu propuesta con tu precio y disponibilidad</p>
                   </div>
                   <Button variant="primary" size="md" onClick={() => setApplyOpen(true)}>
                     Postularme a este trabajo
@@ -247,15 +237,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             </div>
           )}
 
-          {/* ── Employer: Applicants ── */}
+          {/* Employer: applicants */}
           {isEmployer && user?.id === job.employerId && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-bold text-text-primary">
-                  Postulantes
-                </h2>
+                <h2 className="text-base font-bold text-ink">Postulantes</h2>
                 <Badge variant="default" size="sm">
-                  {jobOffers.filter(o => o.status !== "withdrawn").length}
+                  {jobOffers.filter((o) => o.status !== "withdrawn").length}
                 </Badge>
               </div>
 
@@ -274,16 +262,14 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     const SIcon = s.icon;
 
                     return (
-                      <div key={offer.id} className="bg-surface rounded-xl p-4 shadow-card border border-border">
+                      <div key={offer.id} className="bg-card rounded-[16px] p-4 border border-stone-200">
                         <div className="flex items-start gap-3 mb-3">
                           <Avatar name={worker.name} size="md" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
                               <div>
-                                <p className="text-sm font-semibold text-text-primary">{worker.name}</p>
-                                <p className="text-xs text-text-secondary">
-                                  {worker.workerProfile?.category ?? "Trabajador"}
-                                </p>
+                                <p className="text-sm font-semibold text-ink">{worker.name}</p>
+                                <p className="text-xs text-stone-400">{worker.workerProfile?.category ?? "Trabajador"}</p>
                               </div>
                               <Badge variant={s.variant} size="sm" className="shrink-0">
                                 <SIcon className="w-3 h-3" />
@@ -293,7 +279,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                             {worker.workerProfile && (
                               <div className="flex items-center gap-1.5 mt-1">
                                 <StarRow rating={worker.workerProfile.rating} />
-                                <span className="text-xs text-text-secondary">
+                                <span className="text-xs text-stone-400 tnum">
                                   {worker.workerProfile.rating} ({worker.workerProfile.reviewCount})
                                 </span>
                               </div>
@@ -301,84 +287,51 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           </div>
                         </div>
 
-                        {/* Pricing */}
                         <div className="flex gap-3 mb-3">
-                          <div className="flex-1 p-3 bg-background rounded-lg">
-                            <p className="text-xs text-text-secondary">Propuesta</p>
-                            <p className="text-base font-bold text-text-primary">
-                              {formatCOP(offer.proposedPrice)}
-                            </p>
+                          <div className="flex-1 p-3 bg-stone-100 rounded-xl">
+                            <p className="text-xs text-stone-400">Propuesta</p>
+                            <p className="text-base font-bold text-ink tnum">{formatCOP(offer.proposedPrice)}</p>
                           </div>
                           {offer.counterOfferPrice && (
-                            <div className="flex-1 p-3 bg-primary-light rounded-lg">
-                              <p className="text-xs text-primary">Acordado</p>
-                              <p className="text-base font-bold text-primary">
-                                {formatCOP(offer.counterOfferPrice)}
-                              </p>
+                            <div className="flex-1 p-3 bg-azulejo-100 rounded-xl">
+                              <p className="text-xs text-azulejo-500">Acordado</p>
+                              <p className="text-base font-bold text-azulejo-600 tnum">{formatCOP(offer.counterOfferPrice)}</p>
                             </div>
                           )}
                         </div>
 
-                        {/* Message */}
-                        <p className="text-xs text-text-secondary italic leading-relaxed mb-3 line-clamp-2">
+                        <p className="text-xs text-stone-400 italic leading-relaxed mb-3 line-clamp-2">
                           &quot;{offer.message}&quot;
                         </p>
 
-                        {/* Actions */}
                         {offer.status === "pending" && (
-                          <div className="flex gap-2 pt-3 border-t border-border">
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              className="flex-1"
-                              onClick={() => acceptOffer(offer.id)}
-                            >
+                          <div className="flex gap-2 pt-3 border-t border-stone-100">
+                            <Button variant="primary" size="sm" className="flex-1" onClick={() => acceptOffer(offer.id)}>
                               <CheckCircle className="w-4 h-4" />
                               Contratar
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => router.push(`/perfil/${worker.id}`)}
-                            >
+                            <Button variant="outline" size="sm" onClick={() => router.push(`/perfil/${worker.id}`)}>
                               Ver perfil
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleOpenChat(worker.id)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => handleOpenChat(worker.id)}>
                               <MessageSquare className="w-4 h-4" />
                             </Button>
                           </div>
                         )}
                         {offer.status === "negotiating" && (
-                          <div className="flex gap-2 pt-3 border-t border-border">
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              className="flex-1"
-                              onClick={() => acceptOffer(offer.id)}
-                            >
+                          <div className="flex gap-2 pt-3 border-t border-stone-100">
+                            <Button variant="primary" size="sm" className="flex-1" onClick={() => acceptOffer(offer.id)}>
                               Aceptar {formatCOPShort(offer.counterOfferPrice!)}
                             </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleOpenChat(worker.id)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => handleOpenChat(worker.id)}>
                               <MessageSquare className="w-4 h-4" />
                               Chat
                             </Button>
                           </div>
                         )}
                         {offer.status === "accepted" && (
-                          <div className="flex gap-2 pt-3 border-t border-border">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => handleOpenChat(worker.id)}
-                            >
+                          <div className="flex gap-2 pt-3 border-t border-stone-100">
+                            <Button variant="soft" size="sm" onClick={() => handleOpenChat(worker.id)}>
                               <MessageSquare className="w-4 h-4" />
                               Abrir chat
                             </Button>
@@ -392,13 +345,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             </div>
           )}
 
-          {/* Offer count for guests/other employers */}
+          {/* Guest CTA */}
           {!isEmployer && !isWorker && job.status === "open" && (
-            <div className="bg-primary-light rounded-xl p-4 border border-primary/20 text-center">
-              <p className="text-sm font-semibold text-primary mb-1">
+            <div className="bg-azulejo-100 rounded-[16px] p-4 border border-azulejo-200 text-center">
+              <p className="text-sm font-semibold text-azulejo-600 mb-1">
                 ¿Quieres aplicar a este trabajo?
               </p>
-              <p className="text-xs text-text-secondary mb-3">
+              <p className="text-xs text-stone-500 mb-3">
                 Inicia sesión como trabajador para enviar tu propuesta
               </p>
               <Link href="/login">
@@ -406,16 +359,10 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </Link>
             </div>
           )}
-
         </div>
       </PageShell>
 
-      {/* Apply modal */}
-      <ApplyModal
-        job={applyOpen ? job : null}
-        onClose={() => setApplyOpen(false)}
-      />
-
+      <ApplyModal job={applyOpen ? job : null} onClose={() => setApplyOpen(false)} />
       <BottomNav />
     </div>
   );

@@ -2,423 +2,417 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Globe,
-  Wrench,
-  Building2,
-  ArrowRight,
-  CheckCircle,
-  Briefcase,
-  MessageSquare,
-  Star,
-  Search,
-  Users,
-  Zap,
-  ExternalLink,
-} from "lucide-react";
-import { Avatar } from "@/components/ui/Avatar";
-import { Badge } from "@/components/ui/Badge";
+import { Sparkles, ArrowRight, ShieldCheck, Award, Quote } from "lucide-react";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { MobileFooter } from "@/components/layout/MobileFooter";
 import { Button } from "@/components/ui/Button";
-import { useAuth } from "@/context";
-import { workers, employers } from "@/data/users";
+import { Avatar } from "@/components/ui/Avatar";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { Stars } from "@/components/ui/Stars";
+import { Mosaico } from "@/components/brand/Mosaico";
+import { categories } from "@/data/categories";
+import { workers } from "@/data/users";
+import { copy } from "@/data/copy";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Local data ───────────────────────────────────────────────────────────────
 
-const categoryLabel: Record<string, string> = {
-  plomeria: "Plomero",
-  electricidad: "Electricista",
-  carpinteria: "Carpintero",
-  pintura: "Pintor",
+const CATEGORY_LABELS: Record<string, string> = {
+  plomeria: "Plomería",
+  electricidad: "Electricidad",
+  carpinteria: "Carpintería",
+  pintura: "Pintura",
   limpieza: "Limpieza",
-  cerrajeria: "Cerrajero",
   mudanzas: "Mudanzas",
+  cerrajeria: "Cerrajería",
   fumigacion: "Fumigación",
 };
 
-interface Experience {
-  id: string;
-  iconBg: string;
-  icon: React.ElementType;
-  label: string;
-  title: string;
-  description: string;
-  features: { icon: React.ElementType; text: string }[];
-  route: string;
-  routeLabel: string;
-  statusLabel: string;
-  statusVariant: "success" | "default" | "neutral";
-  ctaLabel: string;
-  demoUserId?: string;
-  external?: boolean;
-}
-
-const experiences: Experience[] = [
+const STEPS = [
   {
-    id: "landing",
-    iconBg: "from-slate-600 to-slate-800",
-    icon: Globe,
-    label: "Experiencia pública · Marketing",
-    title: "Landing Page",
-    description:
-      "Página de marketing de Camellio. Lo que ve un visitante nuevo. Presentación del producto, beneficios y flujo de registro.",
-    features: [
-      { icon: CheckCircle, text: "Landing principal + variantes por rol" },
-      { icon: Users, text: "Para técnicos · Para clientes" },
-      { icon: Zap, text: "CTAs que conectan con la app" },
-    ],
-    route: "/landing",
-    routeLabel: "/landing",
-    statusLabel: "Público",
-    statusVariant: "neutral",
-    ctaLabel: "Ver landing page",
+    n: "1",
+    title: "Publica lo que necesitas",
+    body: "Describe el trabajo, agrega fotos si quieres y fija tu presupuesto. Tarda menos de 2 minutos.",
   },
   {
-    id: "worker",
-    iconBg: "from-blue-500 to-indigo-500",
-    icon: Wrench,
-    label: "Experiencia trabajador",
-    title: "App de Trabajador",
-    description:
-      "Dashboard completo para Carlos Mendoza, plomero en Suba. Trabaja con datos reales del contexto y persistencia en localStorage.",
-    features: [
-      { icon: Search, text: "Explorar y postularse a trabajos" },
-      { icon: Briefcase, text: "Gestión de trabajos activos" },
-      { icon: MessageSquare, text: "Chat y calificaciones" },
-    ],
-    route: "/dashboard/worker",
-    routeLabel: "/dashboard/worker",
-    statusLabel: "Demo · u1",
-    statusVariant: "success",
-    ctaLabel: "Entrar como Carlos",
-    demoUserId: "u1",
+    n: "2",
+    title: "Recibe propuestas",
+    body: "Trabajadores verificados en tu zona envían propuestas. Puedes ver su perfil, reseñas y tarifa antes de responder.",
   },
   {
-    id: "employer",
-    iconBg: "from-indigo-600 to-blue-700",
-    icon: Building2,
-    label: "Experiencia empleador",
-    title: "App de Empleador",
-    description:
-      "Dashboard para Juan Pablo Restrepo, administrador de local en Chapinero. Postulantes reales, negociación y revisiones activas.",
-    features: [
-      { icon: Briefcase, text: "Publicar y gestionar trabajos" },
-      { icon: Users, text: "Revisar postulantes y negociar" },
-      { icon: Star, text: "Calificar y gestionar contrataciones" },
-    ],
-    route: "/dashboard/employer",
-    routeLabel: "/dashboard/employer",
-    statusLabel: "Demo · u8",
-    statusVariant: "default",
-    ctaLabel: "Entrar como Juan Pablo",
-    demoUserId: "u8",
+    n: "3",
+    title: "Elige y resuelve",
+    body: "Acepta la propuesta que más te convenza. Si el trabajo no queda bien, lo buscamos de nuevo sin costo adicional.",
   },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote: "Encontré un plomero en menos de 15 minutos, en mi barrio. No tuve que llamar a nadie ni esperar días.",
+    name: "Laura R.",
+    role: "Chapinero",
+  },
+  {
+    quote: "Pude ver las fotos de trabajos anteriores y las reseñas antes de contratar. Eso da mucha más confianza que el voz a voz.",
+    name: "Jorge M.",
+    role: "Negocio local · Engativá",
+  },
+  {
+    quote: "El electricista llegó al otro día. Rápido, limpio y con garantía. No sabía que podía ser tan fácil.",
+    name: "Camila V.",
+    role: "Teusaquillo",
+  },
+];
+
+const TRUST_ITEMS = [
+  {
+    icon: ShieldCheck,
+    color: "text-forest-500",
+    bg: "bg-forest-100",
+    label: copy.trust.verification,
+    desc: copy.trust.verificationDesc,
+  },
+  {
+    icon: ShieldCheck,
+    color: "text-marigold-400",
+    bg: "bg-marigold-100",
+    label: copy.trust.guarantee,
+    desc: copy.trust.guaranteeDesc,
+  },
+  {
+    icon: Award,
+    color: "text-marigold-300",
+    bg: "bg-ink",
+    label: copy.trust.maestro,
+    desc: copy.trust.maestroDesc,
+  },
+];
+
+function verificationLevel(w: typeof workers[0]) {
+  if ((w.workerProfile?.rating ?? 0) >= 4.8 && (w.workerProfile?.reviewCount ?? 0) >= 30) return 3;
+  if (w.workerProfile?.verified) return 2;
+  return 1;
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function HubPage() {
+export default function LandingPage() {
   const router = useRouter();
-  const { login, user, logout } = useAuth();
+  const { login } = useAuth();
 
-  function handleExperience(exp: Experience) {
-    if (exp.demoUserId) {
-      login(exp.demoUserId);
-    }
-    router.push(exp.route);
-  }
-
-  function handleQuickLogin(userId: string, role: "worker" | "employer") {
-    login(userId);
-    router.push(role === "worker" ? "/dashboard/worker" : "/dashboard/employer");
-  }
+  const featured = workers.slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-light via-primary-mid to-background">
-      {/* ── Header ── */}
-      <header className="sticky top-0 z-10 bg-surface/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-lg font-bold text-primary">Camellio</span>
-            <Badge variant="neutral" size="sm">Demo Hub</Badge>
-          </div>
-          <div className="flex items-center gap-3">
-            {user ? (
-              <div className="flex items-center gap-2">
-                <Avatar name={user.name} size="sm" />
-                <span className="text-xs text-text-secondary hidden sm:block">
-                  {user.name.split(" ")[0]}
-                </span>
-                <button
-                  onClick={logout}
-                  className="text-xs text-text-secondary hover:text-danger transition-colors"
-                >
-                  Salir
-                </button>
-              </div>
-            ) : (
-              <Link href="/login">
-                <Button variant="ghost" size="sm">Iniciar sesión</Button>
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-paper">
+      <Header variant="transparent" />
 
-      {/* ── Hero ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-8 text-center">
-        <div className="inline-flex items-center gap-2 bg-surface border border-border text-xs font-semibold text-text-secondary px-3 py-1.5 rounded-full mb-5">
-          <span className="w-2 h-2 rounded-full bg-success inline-block" />
-          Proyecto en desarrollo activo
+      {/* ── Hero ────────────────────────────────────────────────────────────── */}
+      <section className="pt-28 pb-16 px-4 max-w-2xl mx-auto text-left sm:text-center sm:mx-auto">
+        {/* AI chip */}
+        <div className="inline-flex items-center gap-1.5 bg-azulejo-100 text-azulejo-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+          <Sparkles className="w-3.5 h-3.5" strokeWidth={2} />
+          Conectado por IA · Bogotá
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-3 tracking-tight">
-          Bienvenido a Camellio
+
+        <h1 className="text-[2.5rem] sm:text-5xl font-bold text-ink tracking-tight leading-[1.08] mb-4">
+          Lo que necesitas,{" "}
+          <span className="serif">resuelto.</span>
         </h1>
-        <p className="text-text-secondary text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-          Plataforma de servicios locales para Bogotá. Elige la experiencia que quieres
-          explorar o inicia sesión con una cuenta demo.
+
+        <p className="text-base sm:text-lg text-stone-500 leading-relaxed max-w-md sm:mx-auto mb-8">
+          {copy.brand.tagline}
         </p>
-      </div>
 
-      {/* ── Experience cards ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {experiences.map((exp) => {
-            const Icon = exp.icon;
+        <div className="flex flex-col sm:flex-row gap-3 sm:justify-center">
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => router.push("/publicar")}
+          >
+            {copy.cta.publishRequest}
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => router.push("/registro/trabajador")}
+          >
+            {copy.cta.imAWorker}
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
+
+        <p className="text-xs text-stone-400 mt-5 sm:text-center">
+          Trabajadores en 19 localidades de Bogotá
+        </p>
+      </section>
+
+      {/* ── Categories ─────────────────────────────────────────────────────── */}
+      <section className="px-4 pb-16 max-w-2xl mx-auto">
+        <p className="eyebrow text-stone-500 mb-4">Oficios disponibles</p>
+        <div className="grid grid-cols-4 gap-3">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/explorar?categoria=${cat.slug}`}
+              className="flex flex-col items-center gap-2 py-4 rounded-[16px] bg-card border border-stone-200 hover:border-ink transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink group"
+            >
+              <CategoryIcon slug={cat.slug} size="md" />
+              <span className="text-[11px] font-semibold text-stone-600 text-center leading-tight px-1 group-hover:text-ink transition-colors">
+                {cat.name}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Featured workers ───────────────────────────────────────────────── */}
+      <section className="pb-16">
+        <div className="px-4 max-w-2xl mx-auto mb-4">
+          <p className="eyebrow text-stone-500 mb-1">Disponibles en tu zona</p>
+          <h2 className="text-xl font-bold text-ink tracking-tight">
+            Trabajadores verificados
+          </h2>
+        </div>
+
+        <div className="flex gap-3 px-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2">
+          {featured.map((w) => {
+            const level = verificationLevel(w);
             return (
-              <div
-                key={exp.id}
-                className="bg-surface rounded-2xl border border-border shadow-card hover:shadow-card-hover transition-all duration-200 flex flex-col overflow-hidden group"
+              <Link
+                key={w.id}
+                href={`/perfil/${w.id}`}
+                className="shrink-0 w-52 snap-start bg-card rounded-[16px] border border-stone-200 hover:border-ink transition-all duration-150 p-4 flex flex-col gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
               >
-                {/* Card header */}
-                <div className={`bg-gradient-to-br ${exp.iconBg} p-6`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <Badge variant={exp.statusVariant} size="sm">
-                      {exp.statusLabel}
-                    </Badge>
-                  </div>
-                  <p className="text-white/70 text-xs font-medium mb-0.5">
-                    {exp.label}
-                  </p>
-                  <h2 className="text-white text-lg font-bold">{exp.title}</h2>
+                <div className="flex items-start justify-between">
+                  <Avatar name={w.name} size="md" />
+                  {level === 3 ? (
+                    <span className="text-[10px] font-bold bg-ink text-marigold-300 px-2 py-0.5 rounded-full">
+                      Maestro
+                    </span>
+                  ) : level === 2 ? (
+                    <span className="text-[10px] font-bold bg-forest-100 text-forest-600 px-2 py-0.5 rounded-full">
+                      Verificado
+                    </span>
+                  ) : null}
                 </div>
-
-                {/* Card body */}
-                <div className="p-5 flex-1 flex flex-col">
-                  <p className="text-sm text-text-secondary leading-relaxed mb-4">
-                    {exp.description}
+                <div>
+                  <p className="text-sm font-bold text-ink leading-tight">{w.name}</p>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    {CATEGORY_LABELS[w.workerProfile?.category ?? ""] ?? "Trabajador"}
                   </p>
-
-                  <ul className="flex flex-col gap-2 mb-5 flex-1">
-                    {exp.features.map((f) => {
-                      const FIcon = f.icon;
-                      return (
-                        <li key={f.text} className="flex items-center gap-2">
-                          <FIcon className="w-3.5 h-3.5 text-primary shrink-0" />
-                          <span className="text-xs text-text-secondary">{f.text}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-
-                  {/* Route */}
-                  <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-background rounded-lg">
-                    <code className="text-xs text-text-secondary font-mono flex-1 truncate">
-                      {exp.routeLabel}
-                    </code>
-                    <ArrowRight className="w-3 h-3 text-border shrink-0" />
-                  </div>
-
-                  <button
-                    onClick={() => handleExperience(exp)}
-                    className={cn(
-                      "w-full py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-[0.98]",
-                      "bg-primary text-white hover:bg-blue-700 hover:shadow-md"
-                    )}
-                  >
-                    {exp.ctaLabel}
-                  </button>
                 </div>
-              </div>
+                {w.workerProfile && (
+                  <Stars
+                    rating={w.workerProfile.rating}
+                    count={w.workerProfile.reviewCount}
+                    size="sm"
+                  />
+                )}
+              </Link>
             );
           })}
-        </div>
-      </div>
-
-      {/* ── Quick access ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="bg-surface rounded-2xl border border-border p-5 shadow-card">
-          <div className="flex items-center gap-2 mb-5">
-            <Zap className="w-4 h-4 text-accent" />
-            <h3 className="text-sm font-bold text-text-primary">
-              Acceso rápido
-            </h3>
-            <span className="text-xs text-text-secondary">
-              — click para iniciar sesión al instante
+          <Link
+            href="/explorar"
+            className="shrink-0 w-36 snap-start bg-stone-100 rounded-[16px] border border-stone-200 hover:border-ink transition-all duration-150 flex flex-col items-center justify-center gap-2 p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-stone-200 flex items-center justify-center group-hover:bg-ink transition-colors">
+              <ArrowRight className="w-4 h-4 text-stone-500 group-hover:text-paper transition-colors" />
+            </div>
+            <span className="text-xs font-semibold text-stone-500 text-center group-hover:text-ink transition-colors">
+              Ver todos
             </span>
-          </div>
+          </Link>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Workers */}
-            <div>
-              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3 flex items-center gap-1.5">
-                <Wrench className="w-3.5 h-3.5" />
-                Trabajadores
-              </p>
-              <div className="flex flex-col gap-2">
-                {workers.map((w) => (
-                  <button
-                    key={w.id}
-                    onClick={() => handleQuickLogin(w.id, "worker")}
-                    className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all text-left",
-                      user?.id === w.id
-                        ? "border-primary bg-primary-light"
-                        : "border-border bg-background hover:border-primary hover:bg-primary-light/50"
-                    )}
-                  >
-                    <Avatar name={w.name} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-text-primary truncate leading-tight">
-                        {w.name}
-                      </p>
-                      <p className="text-xs text-text-secondary truncate">
-                        {categoryLabel[w.workerProfile?.category ?? ""] ?? "Trabajador"}
-                        {" · "}
-                        <span className="font-mono text-[10px]">{w.id}</span>
-                      </p>
-                    </div>
-                    {user?.id === w.id ? (
-                      <Badge variant="success" size="sm" dot>
-                        Activo
-                      </Badge>
-                    ) : (
-                      <ArrowRight className="w-3.5 h-3.5 text-border" />
-                    )}
-                  </button>
-                ))}
+      {/* ── How it works ───────────────────────────────────────────────────── */}
+      <section className="px-4 pb-16 max-w-2xl mx-auto">
+        <p className="eyebrow text-stone-500 mb-1">Cómo funciona</p>
+        <h2 className="text-xl font-bold text-ink tracking-tight mb-8">
+          Tres pasos para <span className="serif">resolver.</span>
+        </h2>
+
+        <div className="relative flex flex-col gap-0">
+          {/* Connecting line */}
+          <div className="absolute left-[22px] top-11 bottom-11 w-px bg-stone-200" aria-hidden="true" />
+
+          {STEPS.map((step, i) => (
+            <div key={i} className="flex gap-5 relative pb-8 last:pb-0">
+              <div className="shrink-0 w-11 h-11 rounded-xl bg-marigold-100 flex items-center justify-center z-10">
+                <span className="text-base font-bold text-marigold-400 tnum">{step.n}</span>
+              </div>
+              <div className="flex-1 pt-2">
+                <p className="text-base font-bold text-ink mb-1">{step.title}</p>
+                <p className="text-sm text-stone-500 leading-relaxed">{step.body}</p>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            {/* Employers */}
-            <div>
-              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5" />
-                Empleadores
-              </p>
-              <div className="flex flex-col gap-2">
-                {employers.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => handleQuickLogin(e.id, "employer")}
+      {/* ── Trust band ─────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-ink px-4 py-14 mb-0">
+        <div className="absolute inset-0 opacity-15 pointer-events-none">
+          <Mosaico density="dense" />
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <p className="eyebrow text-marigold-300 mb-2">Confianza que importa</p>
+          <h2 className="text-xl font-bold text-paper tracking-tight mb-8">
+            Construido para que confíes.
+          </h2>
+          <div className="flex flex-col gap-4">
+            {TRUST_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.label}
+                  className="flex items-start gap-4 bg-paper/[0.06] rounded-[16px] p-4 border border-paper/10"
+                >
+                  <div
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all text-left",
-                      user?.id === e.id
-                        ? "border-primary bg-primary-light"
-                        : "border-border bg-background hover:border-primary hover:bg-primary-light/50"
+                      "w-10 h-10 rounded-xl shrink-0 flex items-center justify-center",
+                      item.bg === "bg-ink" ? "bg-paper/10" : item.bg
                     )}
                   >
-                    <Avatar name={e.name} size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-text-primary truncate leading-tight">
-                        {e.name}
-                      </p>
-                      <p className="text-xs text-text-secondary truncate">
-                        {e.employerProfile?.companyName ?? "Empleador"}
-                        {" · "}
-                        <span className="font-mono text-[10px]">{e.id}</span>
-                      </p>
-                    </div>
-                    {user?.id === e.id ? (
-                      <Badge variant="success" size="sm" dot>
-                        Activo
-                      </Badge>
-                    ) : (
-                      <ArrowRight className="w-3.5 h-3.5 text-border" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
+                    <Icon
+                      className={cn(
+                        "w-5 h-5",
+                        item.bg === "bg-ink" ? "text-marigold-300" : item.color
+                      )}
+                      strokeWidth={1.75}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-paper leading-tight">{item.label}</p>
+                    <p className="text-xs text-paper/60 mt-0.5 leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Routes reference ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="bg-surface rounded-2xl border border-border p-5 shadow-card">
-          <h3 className="text-sm font-bold text-text-primary mb-4 flex items-center gap-2">
-            <Globe className="w-4 h-4 text-text-secondary" />
-            Mapa de rutas
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+      {/* ── Testimonials ───────────────────────────────────────────────────── */}
+      <section className="px-4 py-14 max-w-2xl mx-auto">
+        <p className="eyebrow text-stone-500 mb-2">Lo que dicen</p>
+        <h2 className="text-xl font-bold text-ink tracking-tight mb-8">
+          Clientes en Bogotá.
+        </h2>
+        <div className="flex flex-col gap-4">
+          {TESTIMONIALS.map((t, i) => (
+            <div
+              key={i}
+              className="bg-card border border-stone-200 rounded-[16px] p-5"
+            >
+              <Quote
+                className="w-5 h-5 text-marigold-300 mb-3"
+                strokeWidth={1.5}
+              />
+              <p className="text-sm text-ink leading-relaxed mb-4">
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <div className="flex items-center gap-3">
+                <Avatar name={t.name} size="sm" />
+                <div>
+                  <p className="text-xs font-bold text-ink">{t.name}</p>
+                  <p className="text-xs text-stone-400">{t.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── CTA band ───────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-ink px-4 py-14">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <Mosaico density="sparse" />
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold text-paper tracking-tight mb-2">
+            ¿Qué necesitas{" "}
+            <span className="serif">resolver?</span>
+          </h2>
+          <p className="text-sm text-paper/60 mb-8 leading-relaxed">
+            Publica tu solicitud y recibe propuestas de trabajadores verificados en minutos.
+          </p>
+          <div className="flex flex-col gap-3">
+            <Button
+              variant="marigold"
+              size="lg"
+              className="w-full"
+              onClick={() => router.push("/publicar")}
+            >
+              {copy.cta.publishRequest}
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full border-paper/30 text-paper hover:bg-paper/10 hover:border-paper/50"
+              onClick={() => router.push("/registro/trabajador")}
+            >
+              {copy.cta.imAWorker}
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Demo access ─────────────────────────────────────────────────────── */}
+      <section className="px-4 py-8 max-w-2xl mx-auto">
+        <details className="group">
+          <summary className="flex items-center gap-2 text-xs font-semibold text-stone-400 cursor-pointer hover:text-ink transition-colors list-none select-none">
+            <div className="w-1.5 h-1.5 rounded-full bg-forest-500" />
+            Prototipo · Acceso rápido
+            <ArrowRight className="w-3 h-3 ml-auto transition-transform group-open:rotate-90" />
+          </summary>
+
+          <div className="mt-4 grid grid-cols-2 gap-2">
             {[
-              { route: "/", label: "Demo hub", desc: "Esta página" },
-              { route: "/landing", label: "Landing principal", desc: "Selector de rol" },
-              { route: "/landing/empleado", label: "LP · Trabajadores", desc: "Marketing para técnicos" },
-              { route: "/landing/empleador", label: "LP · Empleadores", desc: "Marketing para clientes" },
-              { route: "/login", label: "Login", desc: "Inicio de sesión" },
-              { route: "/registro", label: "Registro", desc: "Crear cuenta (4 pasos)" },
-              { route: "/dashboard/worker", label: "Worker dashboard", desc: "Panel del trabajador" },
-              { route: "/dashboard/employer", label: "Employer dashboard", desc: "Panel del empleador" },
-              { route: "/mensajes", label: "Mensajes", desc: "Lista de chats" },
-              { route: "/mensajes/c1", label: "Chat", desc: "Conversación individual" },
-              { route: "/explorar", label: "Explorar trabajos", desc: "Buscar y aplicar" },
-              { route: "/publicar", label: "Publicar trabajo", desc: "Empleadores" },
-              { route: "/trabajos/j1", label: "Detalle trabajo", desc: "Con postular modal" },
-              { route: "/dashboard/worker/applications", label: "Mis postulaciones", desc: "Worker" },
-              { route: "/dashboard/employer/applicants", label: "Postulantes", desc: "Employer" },
-              { route: "/perfil/u1", label: "Perfil trabajador", desc: "Carlos Mendoza" },
-              { route: "/perfil/u7", label: "Perfil empleador", desc: "María Castellanos" },
-              { route: "/worker", label: "→ Worker", desc: "Shortcut auto-login" },
-              { route: "/employer", label: "→ Employer", desc: "Shortcut auto-login" },
-            ].map((r) => (
-              <Link
-                key={r.route}
-                href={r.route}
-                className="flex items-center gap-3 p-3 bg-background rounded-xl hover:bg-primary-light hover:border-primary border border-transparent transition-all group"
+              { label: "Carlos Mendoza", sub: "Trabajador · u1", id: "u1", href: "/dashboard/worker" },
+              { label: "Juan Pablo Restrepo", sub: "Cliente · u8", id: "u8", href: "/dashboard/employer" },
+            ].map((u) => (
+              <button
+                key={u.id}
+                type="button"
+                onClick={() => { login(u.id); router.push(u.href); }}
+                className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 bg-card hover:border-ink transition-colors text-left"
               >
-                <code className="text-xs font-mono text-primary truncate flex-1">
-                  {r.route}
-                </code>
-                <span className="text-xs text-text-secondary shrink-0 hidden sm:block">
-                  {r.desc}
-                </span>
-                <ArrowRight className="w-3 h-3 text-border shrink-0 group-hover:text-primary transition-colors" />
+                <Avatar name={u.label} size="sm" />
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-ink truncate">{u.label}</p>
+                  <p className="text-[10px] text-stone-400">{u.sub}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[
+              ["/explorar", "Explorar"],
+              ["/publicar", "Publicar"],
+              ["/mensajes", "Mensajes"],
+              ["/registro", "Registro"],
+              ["/login", "Login"],
+              ["/perfil/u1", "Perfil u1"],
+            ].map(([href, label]) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-[10px] font-mono text-stone-400 hover:text-ink px-2 py-1 rounded bg-stone-100 hover:bg-stone-200 transition-colors"
+              >
+                {href}
               </Link>
             ))}
           </div>
-        </div>
-      </div>
+        </details>
+      </section>
 
-      {/* ── Footer ── */}
-      <footer className="max-w-5xl mx-auto px-4 sm:px-6 pb-12">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-            {[
-              "Next.js 15",
-              "TypeScript",
-              "Tailwind CSS",
-              "React Context",
-              "localStorage",
-              "Framer Motion",
-            ].map((tech) => (
-              <span
-                key={tech}
-                className="text-xs bg-surface border border-border text-text-secondary px-2.5 py-1 rounded-full"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-          <p className="text-xs text-text-secondary">
-            Camellio MVP · Bogotá, Colombia
-          </p>
-        </div>
-      </footer>
+      {/* ── Footer ──────────────────────────────────────────────────────────── */}
+      <Footer />
+      <MobileFooter />
     </div>
   );
 }

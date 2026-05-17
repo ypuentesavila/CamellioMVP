@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { WorkerProfileView } from "@/components/features/profile/WorkerProfileView";
@@ -18,35 +18,33 @@ export default function ProfilePage({ params }: ProfilePageProps) {
   const user = getUserById(id);
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-24">
       <Navbar />
 
       {/* Back nav */}
-      <div className="bg-surface border-b border-border">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
+      <div className="bg-paper/95 border-b border-stone-200">
+        <div className="max-w-2xl mx-auto px-4 py-2.5">
           <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors"
+            href="/explorar"
+            className="inline-flex items-center gap-1 text-sm text-stone-500 hover:text-ink transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            Volver
+            <ChevronLeft className="w-4 h-4" strokeWidth={2} />
+            Explorar trabajadores
           </Link>
         </div>
       </div>
 
       {!user ? (
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-20 text-center">
-          <p className="text-lg font-semibold text-text-primary">
-            Perfil no encontrado
-          </p>
-          <p className="text-sm text-text-secondary mt-1">
-            El usuario que buscas no existe o fue eliminado.
+        <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+          <p className="text-lg font-bold text-ink">Perfil no encontrado</p>
+          <p className="text-sm text-stone-400 mt-1">
+            El usuario que buscas no existe.
           </p>
           <Link
-            href="/"
-            className="inline-block mt-4 text-sm text-primary font-medium hover:underline"
+            href="/explorar"
+            className="inline-block mt-4 text-sm text-ink font-semibold underline underline-offset-2"
           >
-            Volver al inicio
+            Ver trabajadores
           </Link>
         </div>
       ) : user.role === "worker" ? (

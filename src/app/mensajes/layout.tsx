@@ -18,14 +18,14 @@ export default function MensajesLayout({
   const inChat = !!activeChatId;
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background">
+    <div className="h-screen flex flex-col overflow-hidden bg-paper">
       <Navbar />
 
       <div className="flex flex-1 overflow-hidden">
         {/* ── Sidebar — always visible on desktop, hidden in chat on mobile ── */}
         <aside
           className={cn(
-            "flex-col border-r border-border bg-surface overflow-hidden",
+            "flex-col border-r border-stone-200 bg-card overflow-hidden",
             "w-full md:w-80 md:flex shrink-0",
             inChat ? "hidden md:flex" : "flex"
           )}

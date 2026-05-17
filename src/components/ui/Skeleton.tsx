@@ -3,9 +3,7 @@ import { cn } from "@/lib/utils";
 // ─── Base ─────────────────────────────────────────────────────────────────────
 
 export function Skeleton({ className }: { className?: string }) {
-  return (
-    <div className={cn("animate-pulse bg-border/60 rounded-lg", className)} />
-  );
+  return <div className={cn("shimmer rounded-md", className)} />;
 }
 
 // ─── Primitives ───────────────────────────────────────────────────────────────
@@ -37,7 +35,7 @@ export function SkeletonText({
 
 export function SkeletonStatCard() {
   return (
-    <div className="bg-surface rounded-xl p-4 border border-border">
+    <div className="bg-card rounded-[16px] p-4 border border-stone-200">
       <Skeleton className="w-8 h-8 rounded-lg mb-3" />
       <Skeleton className="h-5 w-14 rounded-full mb-1.5" />
       <Skeleton className="h-3 w-20 rounded-full" />
@@ -47,7 +45,7 @@ export function SkeletonStatCard() {
 
 export function SkeletonJobCardCompact() {
   return (
-    <div className="flex-shrink-0 w-64 snap-start bg-surface rounded-xl p-4 border border-border">
+    <div className="flex-shrink-0 w-64 snap-start bg-card rounded-[16px] p-4 border border-stone-200">
       <div className="flex items-start justify-between mb-3">
         <Skeleton className="h-5 w-16 rounded-full" />
         <Skeleton className="h-4 w-16 rounded-full" />
@@ -55,7 +53,7 @@ export function SkeletonJobCardCompact() {
       <Skeleton className="h-3.5 w-full rounded-full mb-1.5" />
       <Skeleton className="h-3.5 w-2/3 rounded-full mb-3" />
       <Skeleton className="h-3 w-1/2 rounded-full" />
-      <div className="mt-3 pt-3 border-t border-border flex justify-between">
+      <div className="mt-3 pt-3 border-t border-stone-200 flex justify-between">
         <Skeleton className="h-3 w-16 rounded-full" />
         <Skeleton className="h-3 w-14 rounded-full" />
       </div>
@@ -65,7 +63,7 @@ export function SkeletonJobCardCompact() {
 
 export function SkeletonJobCardFull() {
   return (
-    <div className="bg-surface rounded-xl p-4 border border-border">
+    <div className="bg-card rounded-[16px] p-4 border border-stone-200">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0 flex-1">
           <Skeleton className="h-4 w-3/4 rounded-full mb-2" />
@@ -77,7 +75,7 @@ export function SkeletonJobCardFull() {
         <Skeleton className="h-5 w-20 rounded-full shrink-0" />
       </div>
       <Skeleton className="h-3 w-1/3 rounded-full mb-3" />
-      <div className="pt-3 border-t border-border flex justify-between">
+      <div className="pt-3 border-t border-stone-200 flex justify-between">
         <Skeleton className="h-3 w-24 rounded-full" />
         <Skeleton className="h-8 w-28 rounded-xl" />
       </div>
@@ -87,7 +85,7 @@ export function SkeletonJobCardFull() {
 
 export function SkeletonChatItem() {
   return (
-    <div className="flex items-start gap-3 px-4 py-3.5 border-b border-border">
+    <div className="flex items-start gap-3 px-4 py-3.5 border-b border-stone-200">
       <SkeletonAvatar size="md" />
       <div className="flex-1 flex flex-col gap-1.5">
         <div className="flex items-start justify-between gap-2">
@@ -103,7 +101,7 @@ export function SkeletonChatItem() {
 
 export function SkeletonOfferItem() {
   return (
-    <div className="bg-surface rounded-xl p-4 border border-border flex items-center justify-between gap-3">
+    <div className="bg-card rounded-[16px] p-4 border border-stone-200 flex items-center justify-between gap-3">
       <div className="min-w-0 flex-1 flex flex-col gap-1.5">
         <Skeleton className="h-3.5 w-2/3 rounded-full" />
         <Skeleton className="h-3 w-1/2 rounded-full" />
@@ -116,7 +114,7 @@ export function SkeletonOfferItem() {
 
 export function SkeletonActiveJob() {
   return (
-    <div className="bg-surface rounded-xl p-4 border border-border">
+    <div className="bg-card rounded-[16px] p-4 border border-stone-200">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0 flex-1 flex flex-col gap-1.5">
           <Skeleton className="h-4 w-3/4 rounded-full" />
@@ -125,7 +123,7 @@ export function SkeletonActiveJob() {
         </div>
         <Skeleton className="h-5 w-24 rounded-full shrink-0" />
       </div>
-      <div className="pt-3 border-t border-border flex gap-2">
+      <div className="pt-3 border-t border-stone-200 flex gap-2">
         <Skeleton className="h-8 w-28 rounded-xl" />
         <Skeleton className="h-8 w-20 rounded-xl" />
       </div>
@@ -135,7 +133,7 @@ export function SkeletonActiveJob() {
 
 export function SkeletonApplicantCard() {
   return (
-    <div className="bg-surface rounded-xl p-4 border border-border">
+    <div className="bg-card rounded-[16px] p-4 border border-stone-200">
       <div className="flex items-start gap-3 mb-3">
         <SkeletonAvatar size="md" />
         <div className="flex-1 flex flex-col gap-1.5">
@@ -152,7 +150,7 @@ export function SkeletonApplicantCard() {
       </div>
       <Skeleton className="h-3 w-full rounded-full mb-1.5" />
       <Skeleton className="h-3 w-2/3 rounded-full mb-3" />
-      <div className="pt-3 border-t border-border flex gap-2">
+      <div className="pt-3 border-t border-stone-200 flex gap-2">
         <Skeleton className="h-8 flex-1 rounded-xl" />
         <Skeleton className="h-8 w-20 rounded-xl" />
         <Skeleton className="h-8 w-10 rounded-xl" />
@@ -177,9 +175,9 @@ function SkeletonSectionHeader() {
 
 export function SkeletonWorkerDashboard() {
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8">
       {/* Greeting */}
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-2">
@@ -237,9 +235,9 @@ export function SkeletonWorkerDashboard() {
 
 export function SkeletonEmployerDashboard() {
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8">
       {/* Greeting */}
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-2">

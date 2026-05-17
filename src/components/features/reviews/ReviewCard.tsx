@@ -28,25 +28,22 @@ export function ReviewCard({
   return (
     <div
       className={cn(
-        "bg-surface rounded-xl p-4 shadow-card border border-border",
+        "bg-card rounded-[16px] p-4 border border-stone-200",
         className
       )}
     >
-      {/* Header */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2.5">
           <Avatar name={authorName} size="sm" />
           <div>
             <div className="flex items-center gap-1.5">
-              <p className="text-sm font-semibold text-text-primary">
-                {authorName}
-              </p>
+              <p className="text-sm font-semibold text-ink">{authorName}</p>
               {verified && (
-                <CheckCircle className="w-3.5 h-3.5 text-primary" />
+                <CheckCircle className="w-3.5 h-3.5 text-forest-500" />
               )}
             </div>
             {authorRole && (
-              <p className="text-xs text-text-secondary capitalize">
+              <p className="text-xs text-stone-500 capitalize">
                 {authorRole === "worker" ? "Trabajador" : "Empleador"}
               </p>
             )}
@@ -54,22 +51,18 @@ export function ReviewCard({
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <StarDisplay value={rating} size="sm" />
-          <span className="text-xs text-text-secondary">
-            {timeAgo(createdAt)}
-          </span>
+          <span className="text-xs text-stone-400">{timeAgo(createdAt)}</span>
         </div>
       </div>
 
-      {/* Comment */}
-      <p className="text-sm text-text-secondary leading-relaxed italic">
+      <p className="text-sm text-stone-500 leading-relaxed italic">
         &quot;{comment}&quot;
       </p>
 
-      {/* Job reference */}
       {jobTitle && (
-        <p className="text-xs text-text-secondary mt-2 pt-2 border-t border-border">
+        <p className="text-xs text-stone-400 mt-2 pt-2 border-t border-stone-100">
           Trabajo:{" "}
-          <span className="font-medium text-text-primary">{jobTitle}</span>
+          <span className="font-medium text-ink">{jobTitle}</span>
         </p>
       )}
     </div>

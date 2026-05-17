@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const cardVariants = cva("bg-surface rounded-2xl border border-border", {
+const cardVariants = cva("bg-card rounded-[16px] border border-stone-200", {
   variants: {
     variant: {
       default: "shadow-card",
@@ -30,13 +30,7 @@ interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {}
 
-export function Card({
-  className,
-  variant,
-  padding,
-  hoverable,
-  ...props
-}: CardProps) {
+export function Card({ className, variant, padding, hoverable, ...props }: CardProps) {
   return (
     <div
       className={cn(cardVariants({ variant, padding, hoverable }), className)}
@@ -57,7 +51,10 @@ export function CardTitle({
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={cn("text-lg font-bold text-text-primary", className)} {...props} />
+    <h3
+      className={cn("text-lg font-bold text-ink", className)}
+      {...props}
+    />
   );
 }
 
@@ -66,7 +63,10 @@ export function CardDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn("text-sm text-text-secondary mt-1", className)} {...props} />
+    <p
+      className={cn("text-sm text-stone-500 mt-1", className)}
+      {...props}
+    />
   );
 }
 
@@ -75,6 +75,9 @@ export function CardFooter({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("mt-4 flex items-center gap-3", className)} {...props} />
+    <div
+      className={cn("mt-4 flex items-center gap-3", className)}
+      {...props}
+    />
   );
 }

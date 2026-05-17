@@ -76,48 +76,49 @@ export function ReviewModal({
       {success ? (
         /* ── Success ── */
         <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-          <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle className="w-8 h-8 text-success" strokeWidth={2} />
+          <div className="w-16 h-16 bg-forest-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-8 h-8 text-forest-500" strokeWidth={2} />
           </div>
-          <h2 className="text-xl font-bold text-text-primary mb-1">
+          <h2 className="text-xl font-bold text-ink mb-1">
             ¡Reseña enviada!
           </h2>
           <div className="my-3">
             <StarDisplay value={rating} size="md" showValue />
           </div>
-          <p className="text-sm text-text-secondary leading-relaxed max-w-xs">
+          <p className="text-sm text-stone-500 leading-relaxed max-w-xs">
             Tu reseña ayuda a construir confianza en la comunidad de Camellio.
           </p>
         </div>
       ) : (
         <>
           {/* ── Header ── */}
-          <div className="flex items-start justify-between p-5 border-b border-border">
+          <div className="flex items-start justify-between p-5 border-b border-stone-200">
             <div className="min-w-0 pr-3">
-              <h2 className="font-bold text-text-primary text-lg">
+              <h2 className="font-bold text-ink text-lg">
                 Calificar trabajador
               </h2>
-              <p className="text-sm text-text-secondary mt-0.5 line-clamp-1">
+              <p className="text-sm text-stone-500 mt-0.5 line-clamp-1">
                 {jobTitle}
               </p>
             </div>
             <button
               onClick={handleClose}
-              className="shrink-0 p-1.5 rounded-lg hover:bg-background transition-colors"
+              className="shrink-0 -m-1 p-2.5 rounded-xl hover:bg-stone-100 transition-colors"
+              aria-label="Cerrar"
             >
-              <X className="w-5 h-5 text-text-secondary" />
+              <X className="w-5 h-5 text-stone-500" />
             </button>
           </div>
 
           {/* ── Worker info ── */}
           <div className="px-5 pt-5">
-            <div className="flex items-center gap-3 bg-background rounded-xl p-3">
+            <div className="flex items-center gap-3 bg-stone-100 rounded-xl p-3">
               <Avatar name={targetName} size="md" />
               <div>
-                <p className="font-semibold text-text-primary text-sm">
+                <p className="font-semibold text-ink text-sm">
                   {targetName}
                 </p>
-                <p className="text-xs text-text-secondary">Trabajador</p>
+                <p className="text-xs text-stone-500">Trabajador</p>
               </div>
             </div>
           </div>
@@ -126,7 +127,7 @@ export function ReviewModal({
           <div className="p-5 flex flex-col gap-5">
             {/* Stars */}
             <div>
-              <p className="text-sm font-semibold text-text-primary mb-3 text-center">
+              <p className="text-sm font-semibold text-ink mb-3 text-center">
                 ¿Cómo calificarías el trabajo?
               </p>
               <StarPicker
@@ -146,7 +147,7 @@ export function ReviewModal({
 
             {/* Comment */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-1.5">
+              <label className="block text-sm font-semibold text-ink mb-1.5">
                 Cuéntanos más
               </label>
               <textarea
@@ -155,8 +156,8 @@ export function ReviewModal({
                   setComment(e.target.value);
                   setErrors((err) => ({ ...err, comment: "" }));
                 }}
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-text-primary bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none leading-relaxed ${
-                  errors.comment ? "border-danger" : "border-border"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-ink bg-card focus:outline-none focus:ring-2 focus:ring-ink/20 focus:border-ink transition-colors resize-none leading-relaxed ${
+                  errors.comment ? "border-danger" : "border-stone-200"
                 }`}
                 placeholder="¿Fue puntual? ¿Dejó todo limpio? ¿Lo recomendarías? Sé específico para ayudar a otros empleadores..."
                 rows={4}
@@ -165,7 +166,7 @@ export function ReviewModal({
                 <p className="text-xs text-danger">{errors.comment ?? ""}</p>
                 <p
                   className={`text-xs ml-auto ${
-                    comment.length >= 20 ? "text-success" : "text-text-secondary"
+                    comment.length >= 20 ? "text-forest-500" : "text-stone-400"
                   }`}
                 >
                   {comment.length} / 20 mín
@@ -184,7 +185,7 @@ export function ReviewModal({
               {submitting ? "Publicando reseña..." : "Publicar reseña"}
             </Button>
 
-            <p className="text-xs text-text-secondary text-center -mt-2">
+            <p className="text-xs text-stone-400 text-center -mt-2">
               Las reseñas son públicas y no se pueden eliminar después de 48h.
             </p>
           </div>

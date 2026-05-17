@@ -43,20 +43,20 @@ export default function EmployerApplicantsPage() {
   ).length;
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8">
       <Navbar />
 
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <PageShell className="py-4">
           <Link
             href="/dashboard/employer"
-            className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors mb-3"
+            className="inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-ink transition-colors mb-3"
           >
             <ArrowLeft className="w-4 h-4" />
             Mi dashboard
           </Link>
-          <h1 className="text-xl font-bold text-text-primary">Postulantes</h1>
-          <p className="text-sm text-text-secondary mt-0.5">
+          <h1 className="text-xl font-bold text-ink">Postulantes</h1>
+          <p className="text-sm text-stone-500 mt-0.5">
             {totalPending} pendiente{totalPending !== 1 ? "s" : ""} · {allOffers.length} total
           </p>
         </PageShell>
@@ -82,7 +82,7 @@ export default function EmployerApplicantsPage() {
                   <div className="flex items-center justify-between mb-3">
                     <Link
                       href={`/trabajos/${job.id}`}
-                      className="text-sm font-bold text-text-primary hover:text-primary transition-colors truncate"
+                      className="text-sm font-bold text-ink hover:text-azulejo-500 transition-colors truncate"
                     >
                       {job.title}
                     </Link>
@@ -97,17 +97,17 @@ export default function EmployerApplicantsPage() {
                       const isPending = offer.status === "pending" || offer.status === "negotiating";
 
                       return (
-                        <div key={offer.id} className="bg-surface rounded-xl p-4 shadow-card border border-border">
+                        <div key={offer.id} className="bg-card rounded-[16px] p-4 border border-stone-200">
                           {/* Worker */}
                           <div className="flex items-start gap-3 mb-3">
                             <Avatar name={worker.name} size="md" />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
                                 <div>
-                                  <p className="text-sm font-semibold text-text-primary">
+                                  <p className="text-sm font-semibold text-ink">
                                     {worker.name}
                                   </p>
-                                  <p className="text-xs text-text-secondary">
+                                  <p className="text-xs text-stone-500">
                                     {worker.workerProfile?.category}
                                   </p>
                                 </div>
@@ -118,7 +118,7 @@ export default function EmployerApplicantsPage() {
                               {worker.workerProfile && (
                                 <div className="flex items-center gap-1.5 mt-1">
                                   <StarDisplay value={worker.workerProfile.rating} size="sm" />
-                                  <span className="text-xs text-text-secondary">
+                                  <span className="text-xs text-stone-500 tnum">
                                     {worker.workerProfile.rating} ({worker.workerProfile.reviewCount})
                                   </span>
                                 </div>
@@ -128,27 +128,27 @@ export default function EmployerApplicantsPage() {
 
                           {/* Pricing */}
                           <div className="flex gap-3 mb-3">
-                            <div className="flex-1 p-3 bg-background rounded-lg">
-                              <p className="text-xs text-text-secondary">Propuesta</p>
-                              <p className="text-sm font-bold text-text-primary">
+                            <div className="flex-1 p-3 bg-stone-100 rounded-xl">
+                              <p className="text-xs text-stone-500">Propuesta</p>
+                              <p className="text-sm font-bold text-ink tnum">
                                 {formatCOP(offer.proposedPrice)}
                               </p>
                             </div>
                             {offer.counterOfferPrice && (
-                              <div className="flex-1 p-3 bg-primary-light rounded-lg">
-                                <p className="text-xs text-primary">Acordado</p>
-                                <p className="text-sm font-bold text-primary">
+                              <div className="flex-1 p-3 bg-azulejo-100 rounded-xl">
+                                <p className="text-xs text-azulejo-500">Acordado</p>
+                                <p className="text-sm font-bold text-azulejo-600 tnum">
                                   {formatCOP(offer.counterOfferPrice)}
                                 </p>
                               </div>
                             )}
                           </div>
 
-                          <p className="text-xs text-text-secondary italic line-clamp-2 mb-3">
+                          <p className="text-xs text-stone-500 italic line-clamp-2 mb-3">
                             &quot;{offer.message}&quot;
                           </p>
 
-                          <div className="flex gap-2 pt-3 border-t border-border">
+                          <div className="flex gap-2 pt-3 border-t border-stone-200">
                             {isPending && (
                               <Button
                                 variant="primary"
@@ -184,7 +184,7 @@ export default function EmployerApplicantsPage() {
             {/* Offers from jobs not currently open (completed, etc.) */}
             {allOffers.filter((o) => !employerJobs.some((j) => j.id === o.jobId)).length > 0 && (
               <div>
-                <p className="text-sm font-bold text-text-secondary mb-3">Trabajos finalizados</p>
+                <p className="text-sm font-bold text-stone-500 mb-3">Trabajos finalizados</p>
                 <div className="flex flex-col gap-3">
                   {allOffers
                     .filter((o) => !employerJobs.some((j) => j.id === o.jobId))
@@ -195,12 +195,12 @@ export default function EmployerApplicantsPage() {
                       const s = statusConfig[offer.status];
 
                       return (
-                        <div key={offer.id} className="bg-surface rounded-xl p-4 border border-border opacity-70">
+                        <div key={offer.id} className="bg-card rounded-[16px] p-4 border border-stone-200 opacity-70">
                           <div className="flex items-center justify-between gap-3">
                             <div className="min-w-0">
-                              <p className="text-xs text-text-secondary truncate">{job?.title}</p>
-                              <p className="text-sm font-semibold text-text-primary">{worker.name}</p>
-                              <p className="text-xs text-text-secondary">{formatCOP(offer.proposedPrice)}</p>
+                              <p className="text-xs text-stone-500 truncate">{job?.title}</p>
+                              <p className="text-sm font-semibold text-ink">{worker.name}</p>
+                              <p className="text-xs text-stone-500 tnum">{formatCOP(offer.proposedPrice)}</p>
                             </div>
                             <Badge variant={s.variant} size="sm">{s.label}</Badge>
                           </div>

@@ -124,35 +124,35 @@ const activityFeed = [
   {
     id: "a1",
     icon: MessageSquare,
-    color: "text-primary bg-primary-light",
+    color: "text-azulejo-500 bg-azulejo-100",
     text: "Andrés Vargas aceptó negociar precio — $170.000",
     time: "2026-05-09T11:30:00Z",
   },
   {
     id: "a2",
     icon: Users,
-    color: "text-text-secondary bg-background",
+    color: "text-stone-500 bg-stone-100",
     text: "Sebastián Jiménez se postuló a 'Puerta corrediza'",
     time: "2026-05-08T14:30:00Z",
   },
   {
     id: "a3",
     icon: Users,
-    color: "text-text-secondary bg-background",
+    color: "text-stone-500 bg-stone-100",
     text: "Diego Ríos se postuló a 'Puerta corrediza'",
     time: "2026-05-08T08:00:00Z",
   },
   {
     id: "a4",
     icon: Plus,
-    color: "text-success bg-success/10",
+    color: "text-forest-500 bg-forest-100",
     text: "Publicaste 'Puerta corrediza de madera atascada'",
     time: "2026-05-07T11:45:00Z",
   },
   {
     id: "a5",
     icon: CheckCircle,
-    color: "text-success bg-success/10",
+    color: "text-forest-500 bg-forest-100",
     text: "Trabajo completado — Reparación tubería · Carlos Mendoza",
     time: "2026-04-14T17:00:00Z",
   },
@@ -189,7 +189,7 @@ function StarRow({ rating }: { rating: number }) {
         <Star
           key={i}
           className={`w-3 h-3 ${
-            i < Math.floor(rating) ? "fill-accent text-accent" : "text-border"
+            i < Math.floor(rating) ? "fill-marigold-300 text-marigold-300" : "text-stone-200"
           }`}
         />
       ))}
@@ -236,27 +236,27 @@ export default function EmployerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8 animate-fade-in">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8 animate-fade-in">
       <Navbar />
 
       {/* ── Greeting ── */}
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <PageShell className="py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-text-secondary">Buenos días</p>
-              <h1 className="text-xl font-bold text-text-primary mt-0.5">
+              <p className="text-sm text-stone-500">Buenos días</p>
+              <h1 className="text-xl font-bold text-ink mt-0.5">
                 {employer.name}
               </h1>
               <div className="flex items-center gap-1.5 mt-1">
-                <Building2 className="w-3.5 h-3.5 text-text-secondary" />
-                <span className="text-sm text-text-secondary">
+                <Building2 className="w-3.5 h-3.5 text-stone-500" />
+                <span className="text-sm text-stone-500">
                   {employer.company}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <MapPin className="w-3.5 h-3.5 text-text-secondary" />
-                <span className="text-sm text-text-secondary">
+                <MapPin className="w-3.5 h-3.5 text-stone-500" />
+                <span className="text-sm text-stone-500">
                   {employer.location}
                 </span>
               </div>
@@ -309,15 +309,15 @@ export default function EmployerDashboardPage() {
 
         <div className="flex flex-col gap-3">
           {/* Post new job card */}
-          <button className="w-full bg-surface rounded-xl border-2 border-dashed border-border hover:border-primary hover:bg-primary-light transition-all p-5 text-center group">
-            <Plus className="w-6 h-6 text-text-secondary group-hover:text-primary mx-auto mb-1 transition-colors" />
-            <p className="text-sm font-semibold text-text-secondary group-hover:text-primary transition-colors">
+          <Link href="/publicar" className="w-full bg-card rounded-[16px] border-2 border-dashed border-stone-200 hover:border-ink hover:bg-stone-50 transition-all p-5 text-center group block">
+            <Plus className="w-6 h-6 text-stone-500 group-hover:text-ink mx-auto mb-1 transition-colors" />
+            <p className="text-sm font-semibold text-stone-500 group-hover:text-ink transition-colors">
               Publicar nuevo trabajo
             </p>
-            <p className="text-xs text-text-secondary mt-0.5">
+            <p className="text-xs text-stone-400 mt-0.5">
               Gratis · Sin comisiones ocultas
             </p>
-          </button>
+          </Link>
 
           {publishedJobs.map((job) => {
             const s = jobStatusConfig[job.status];
@@ -325,12 +325,12 @@ export default function EmployerDashboardPage() {
             return (
               <div
                 key={job.id}
-                className="bg-surface rounded-xl p-4 shadow-card border border-border"
+                className="bg-card rounded-[16px] p-4 border border-stone-200"
               >
                 {/* Header row */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
-                    <p className="font-semibold text-text-primary text-sm leading-snug">
+                    <p className="font-semibold text-ink text-sm leading-snug">
                       {job.title}
                     </p>
                     <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -348,22 +348,22 @@ export default function EmployerDashboardPage() {
                 </div>
 
                 {/* Meta row */}
-                <div className="flex items-center gap-3 text-text-secondary text-xs">
+                <div className="flex items-center gap-3 text-stone-500 text-xs">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5" />
                     {job.location}
                   </div>
-                  <span className="text-border">·</span>
-                  <span className="font-semibold text-primary">
+                  <span className="text-stone-200">·</span>
+                  <span className="font-semibold text-ink tnum">
                     {formatCOPShort(job.budget.min)}–{formatCOPShort(job.budget.max)}
                   </span>
-                  <span className="text-border">·</span>
+                  <span className="text-stone-200">·</span>
                   <span>{timeAgo(job.createdAt)}</span>
                 </div>
 
                 {/* Footer */}
-                <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs text-text-secondary">
+                <div className="mt-3 pt-3 border-t border-stone-200 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs text-stone-500">
                     <Users className="w-3.5 h-3.5" />
                     <span>
                       {job.offerCount}{" "}
@@ -408,7 +408,7 @@ export default function EmployerDashboardPage() {
             return (
               <div
                 key={app.id}
-                className="bg-surface rounded-xl p-4 shadow-card border border-border"
+                className="bg-card rounded-[16px] p-4 border border-stone-200"
               >
                 {/* Worker info */}
                 <div className="flex items-start gap-3 mb-3">
@@ -416,10 +416,10 @@ export default function EmployerDashboardPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="font-semibold text-text-primary text-sm">
+                        <p className="font-semibold text-ink text-sm">
                           {app.workerName}
                         </p>
-                        <p className="text-xs text-text-secondary">
+                        <p className="text-xs text-stone-500">
                           {app.workerCategory}
                         </p>
                       </div>
@@ -429,7 +429,7 @@ export default function EmployerDashboardPage() {
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <StarRow rating={app.workerRating} />
-                      <span className="text-xs text-text-secondary">
+                      <span className="text-xs text-stone-500 tnum">
                         {app.workerRating} ({app.workerReviews})
                       </span>
                     </div>
@@ -437,22 +437,22 @@ export default function EmployerDashboardPage() {
                 </div>
 
                 {/* Job reference */}
-                <p className="text-xs text-text-secondary bg-background rounded-lg px-3 py-2 mb-3">
-                  Para: <span className="font-medium text-text-primary">{app.jobTitle}</span>
+                <p className="text-xs text-stone-500 bg-stone-100 rounded-xl px-3 py-2 mb-3">
+                  Para: <span className="font-medium text-ink">{app.jobTitle}</span>
                 </p>
 
                 {/* Pricing */}
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="flex-1 p-3 bg-background rounded-lg">
-                    <p className="text-xs text-text-secondary">Propuesta inicial</p>
-                    <p className="text-base font-bold text-text-primary">
+                  <div className="flex-1 p-3 bg-stone-100 rounded-xl">
+                    <p className="text-xs text-stone-500">Propuesta inicial</p>
+                    <p className="text-base font-bold text-ink tnum">
                       {formatCOP(app.proposedPrice)}
                     </p>
                   </div>
                   {app.counterOfferPrice && (
-                    <div className="flex-1 p-3 bg-primary-light rounded-lg">
-                      <p className="text-xs text-primary">Acordado</p>
-                      <p className="text-base font-bold text-primary">
+                    <div className="flex-1 p-3 bg-azulejo-100 rounded-xl">
+                      <p className="text-xs text-azulejo-500">Acordado</p>
+                      <p className="text-base font-bold text-azulejo-600 tnum">
                         {formatCOP(app.counterOfferPrice)}
                       </p>
                     </div>
@@ -460,12 +460,12 @@ export default function EmployerDashboardPage() {
                 </div>
 
                 {/* Message preview */}
-                <p className="text-xs text-text-secondary italic leading-relaxed mb-3 line-clamp-2">
+                <p className="text-xs text-stone-500 italic leading-relaxed mb-3 line-clamp-2">
                   &quot;{app.message}&quot;
                 </p>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-3 border-t border-border">
+                <div className="flex items-center gap-2 pt-3 border-t border-stone-200">
                   {app.status === "pending" && (
                     <Button variant="primary" size="sm" className="flex-1">
                       <CheckCircle className="w-4 h-4" />
@@ -511,17 +511,17 @@ export default function EmployerDashboardPage() {
             {activeHires.map((hire) => (
               <div
                 key={hire.id}
-                className="bg-surface rounded-xl p-4 shadow-card border border-border"
+                className="bg-card rounded-[16px] p-4 border border-stone-200"
               >
                 <div className="flex items-start gap-3">
                   <Avatar name={hire.workerName} size="md" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="font-semibold text-text-primary text-sm">
+                        <p className="font-semibold text-ink text-sm">
                           {hire.workerName}
                         </p>
-                        <p className="text-xs text-text-secondary">
+                        <p className="text-xs text-stone-500">
                           {hire.workerCategory}
                         </p>
                       </div>
@@ -529,25 +529,25 @@ export default function EmployerDashboardPage() {
                         En progreso
                       </Badge>
                     </div>
-                    <p className="text-xs text-text-secondary mt-1 truncate">
+                    <p className="text-xs text-stone-500 mt-1 truncate">
                       {hire.jobTitle}
                     </p>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs font-semibold text-primary">
+                      <span className="text-xs font-semibold text-ink tnum">
                         {formatCOP(hire.agreedPrice)}
                       </span>
                       <div className="flex items-center gap-1">
                         <StarRow rating={hire.workerRating} />
-                        <span className="text-xs text-text-secondary">
+                        <span className="text-xs text-stone-500 tnum">
                           {hire.workerRating}
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+                <div className="mt-3 pt-3 border-t border-stone-200 flex items-center gap-2">
                   <Link href={`/trabajos/${hire.jobId ?? "j10"}`}>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="soft" size="sm">
                       Ver detalles
                     </Button>
                   </Link>
@@ -557,7 +557,7 @@ export default function EmployerDashboardPage() {
                       Chat
                     </Button>
                   </Link>
-                  <Button variant="ghost" size="sm" className="ml-auto text-success">
+                  <Button variant="ghost" size="sm" className="ml-auto text-forest-500">
                     <CheckCircle className="w-4 h-4" />
                     Completar
                   </Button>
@@ -572,13 +572,13 @@ export default function EmployerDashboardPage() {
       <PageShell className="mt-7">
         <SectionHeader title="Actividad reciente" />
 
-        <div className="bg-surface rounded-xl shadow-card border border-border divide-y divide-border">
+        <div className="bg-card rounded-[16px] border border-stone-200 divide-y divide-stone-100">
           {activityFeed.map((event, index) => {
             const Icon = event.icon;
             return (
               <div
                 key={event.id}
-                className="flex items-start gap-3 p-4 hover:bg-background transition-colors"
+                className="flex items-start gap-3 p-4 hover:bg-stone-50 transition-colors"
               >
                 <div
                   className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${event.color}`}
@@ -586,15 +586,15 @@ export default function EmployerDashboardPage() {
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-primary leading-snug">
+                  <p className="text-sm text-ink leading-snug">
                     {event.text}
                   </p>
-                  <p className="text-xs text-text-secondary mt-0.5">
+                  <p className="text-xs text-stone-500 mt-0.5">
                     {timeAgo(event.time)}
                   </p>
                 </div>
                 {index === 0 && (
-                  <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />
+                  <span className="w-2 h-2 rounded-full bg-azulejo-500 shrink-0 mt-1.5" />
                 )}
               </div>
             );
@@ -610,35 +610,35 @@ export default function EmployerDashboardPage() {
         />
         <div className="flex flex-col gap-3">
           {receivedReviews.length === 0 ? (
-            <div className="bg-surface rounded-xl border border-dashed border-border p-8 text-center">
-              <Star className="w-8 h-8 text-border mx-auto mb-2" />
-              <p className="text-sm text-text-secondary">
+            <div className="bg-card rounded-[16px] border border-dashed border-stone-200 p-8 text-center">
+              <Star className="w-8 h-8 text-stone-200 mx-auto mb-2" />
+              <p className="text-sm text-stone-500">
                 Aún no tienes calificaciones
               </p>
-              <p className="text-xs text-text-secondary mt-1">
+              <p className="text-xs text-stone-400 mt-1">
                 Los trabajadores podrán calificarte al completar un trabajo
               </p>
             </div>
           ) : (
             <>
               {/* Average badge */}
-              <div className="flex items-center gap-3 p-4 bg-surface rounded-xl shadow-card border border-border">
+              <div className="flex items-center gap-3 p-4 bg-card rounded-[16px] border border-stone-200">
                 <div className="flex items-center gap-1.5">
                   {Array.from({ length: 5 }).map((_, i) => {
                     const avg = receivedReviews.reduce((s, r) => s + r.rating, 0) / receivedReviews.length;
                     return (
                       <Star
                         key={i}
-                        className={`w-5 h-5 ${i < Math.round(avg) ? "fill-accent text-accent" : "text-border"}`}
+                        className={`w-5 h-5 ${i < Math.round(avg) ? "fill-marigold-300 text-marigold-300" : "text-stone-200"}`}
                       />
                     );
                   })}
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-text-primary leading-none">
+                  <p className="text-lg font-bold text-ink tnum leading-none">
                     {(receivedReviews.reduce((s, r) => s + r.rating, 0) / receivedReviews.length).toFixed(1)}
                   </p>
-                  <p className="text-xs text-text-secondary mt-0.5">
+                  <p className="text-xs text-stone-500 mt-0.5">
                     {receivedReviews.length} calificación{receivedReviews.length !== 1 ? "es" : ""} de trabajadores
                   </p>
                 </div>
@@ -704,18 +704,18 @@ export default function EmployerDashboardPage() {
               return (
                 <div
                   key={j.id}
-                  className="bg-accent-light rounded-xl p-4 border border-accent/20 flex items-center justify-between gap-3"
+                  className="bg-marigold-100 rounded-[16px] p-4 border border-marigold-200 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-text-primary">
+                    <p className="text-sm font-semibold text-ink">
                       ¿Cómo te fue con {worker.name.split(" ")[0]}?
                     </p>
-                    <p className="text-xs text-text-secondary mt-0.5 truncate">
+                    <p className="text-xs text-stone-500 mt-0.5 truncate">
                       {j.title} · {timeAgo(j.createdAt)}
                     </p>
                   </div>
                   <Button
-                    variant="accent"
+                    variant="primary"
                     size="sm"
                     className="shrink-0"
                     onClick={() =>
@@ -737,12 +737,12 @@ export default function EmployerDashboardPage() {
 
           {realReviews.length === 0 &&
             !publishedJobs.some((j) => j.status === "completed") && (
-              <div className="bg-surface rounded-xl border border-dashed border-border p-8 text-center">
-                <Star className="w-8 h-8 text-border mx-auto mb-2" />
-                <p className="text-sm text-text-secondary">
+              <div className="bg-card rounded-[16px] border border-dashed border-stone-200 p-8 text-center">
+                <Star className="w-8 h-8 text-stone-200 mx-auto mb-2" />
+                <p className="text-sm text-stone-500">
                   Aún no has dejado reseñas
                 </p>
-                <p className="text-xs text-text-secondary mt-1">
+                <p className="text-xs text-stone-400 mt-1">
                   Podrás calificar a los trabajadores al completar un trabajo
                 </p>
               </div>

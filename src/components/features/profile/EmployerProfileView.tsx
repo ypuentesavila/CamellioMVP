@@ -56,32 +56,32 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
   return (
     <div className="max-w-3xl mx-auto">
       {/* ── Header ── */}
-      <div className="bg-surface border-b border-border px-4 sm:px-6 py-8">
+      <div className="bg-card border-b border-stone-200 px-4 sm:px-6 py-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
           <Avatar
             name={user.name}
             size="xl"
-            className="ring-4 ring-background shadow-card-hover"
+            className="ring-4 ring-paper shadow-card-hover"
           />
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <h1 className="text-2xl font-bold text-text-primary">
+              <h1 className="text-2xl font-bold text-ink">
                 {user.name}
               </h1>
               {profile.verified && (
-                <CheckCircle className="w-5 h-5 text-primary shrink-0" />
+                <CheckCircle className="w-5 h-5 text-forest-500 shrink-0" />
               )}
             </div>
 
             {profile.companyName && (
-              <div className="flex items-center gap-1.5 text-text-secondary text-sm mb-1">
+              <div className="flex items-center gap-1.5 text-stone-500 text-sm mb-1">
                 <Building2 className="w-4 h-4" />
                 <span className="font-medium">{profile.companyName}</span>
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 text-text-secondary text-sm mb-2">
+            <div className="flex items-center gap-1.5 text-stone-500 text-sm mb-2">
               <MapPin className="w-3.5 h-3.5" />
               {user.location}
             </div>
@@ -118,43 +118,43 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
       </div>
 
       {/* ── Stats ── */}
-      <div className="bg-background border-b border-border px-4 sm:px-6 py-4">
+      <div className="bg-paper border-b border-stone-200 px-4 sm:px-6 py-4">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             {
               icon: Briefcase,
               value: String(profile.jobsPosted),
               label: "Trabajos publicados",
-              color: "text-primary",
+              color: "text-azulejo-500",
             },
             {
               icon: Users,
               value: String(completedJobs.length + activeJobs.length),
               label: "Contrataciones",
-              color: "text-success",
+              color: "text-forest-500",
             },
             {
               icon: Star,
               value: `${hiringRate}%`,
               label: "Tasa de contratación",
-              color: "text-accent",
+              color: "text-marigold-400",
             },
             {
               icon: Calendar,
               value: `Desde ${memberYear}`,
               label: "Miembro",
-              color: "text-text-primary",
+              color: "text-ink",
             },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="text-center p-3 rounded-xl bg-surface border border-border"
+              className="text-center p-3 rounded-xl bg-card border border-stone-200"
             >
               <stat.icon className={`w-5 h-5 mx-auto mb-1 ${stat.color}`} />
-              <p className="text-base font-bold text-text-primary">
+              <p className="text-base font-bold text-ink tnum">
                 {stat.value}
               </p>
-              <p className="text-xs text-text-secondary leading-tight">
+              <p className="text-xs text-stone-500 leading-tight">
                 {stat.label}
               </p>
             </div>
@@ -166,11 +166,11 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
         {/* ── About ── */}
         {user.bio && (
           <section>
-            <h2 className="text-base font-bold text-text-primary mb-3">
+            <h2 className="text-base font-bold text-ink mb-3">
               Sobre mí
             </h2>
-            <div className="bg-surface rounded-xl p-5 shadow-card border border-border">
-              <p className="text-sm text-text-secondary leading-relaxed">
+            <div className="bg-card rounded-[16px] p-5 border border-stone-200">
+              <p className="text-sm text-stone-500 leading-relaxed">
                 {user.bio}
               </p>
             </div>
@@ -179,7 +179,7 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
 
         {/* ── Trust ── */}
         <section>
-          <h2 className="text-base font-bold text-text-primary mb-3">
+          <h2 className="text-base font-bold text-ink mb-3">
             Confianza
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -217,28 +217,28 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex items-start gap-3 p-4 bg-surface rounded-xl border border-border shadow-card"
+                className="flex items-start gap-3 p-4 bg-card rounded-[16px] border border-stone-200"
               >
                 <div
                   className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                    item.ok ? "bg-success/10" : "bg-background"
+                    item.ok ? "bg-forest-100" : "bg-stone-100"
                   }`}
                 >
                   <item.icon
                     className={`w-5 h-5 ${
-                      item.ok ? "text-success" : "text-border"
+                      item.ok ? "text-forest-500" : "text-stone-300"
                     }`}
                   />
                 </div>
                 <div>
                   <p
                     className={`text-sm font-semibold ${
-                      item.ok ? "text-text-primary" : "text-text-secondary"
+                      item.ok ? "text-ink" : "text-stone-500"
                     }`}
                   >
                     {item.label}
                   </p>
-                  <p className="text-xs text-text-secondary mt-0.5">
+                  <p className="text-xs text-stone-500 mt-0.5">
                     {item.sub}
                   </p>
                 </div>
@@ -269,9 +269,9 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
             count={reviewsGiven.length}
           />
           {reviewsGiven.length === 0 ? (
-            <div className="bg-surface rounded-xl border border-dashed border-border p-8 text-center">
-              <Star className="w-8 h-8 text-border mx-auto mb-2" />
-              <p className="text-sm text-text-secondary">
+            <div className="bg-card rounded-[16px] border border-dashed border-stone-200 p-8 text-center">
+              <Star className="w-8 h-8 text-stone-200 mx-auto mb-2" />
+              <p className="text-sm text-stone-500">
                 Aún no ha dejado reseñas
               </p>
             </div>

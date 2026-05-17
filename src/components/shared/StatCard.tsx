@@ -12,24 +12,24 @@ interface StatCardProps {
 
 const variants = {
   default: {
-    iconBg: "bg-primary-light",
-    iconColor: "text-primary",
-    value: "text-text-primary",
+    iconBg: "bg-azulejo-100",
+    iconColor: "text-azulejo-500",
+    value: "text-ink",
   },
   primary: {
-    iconBg: "bg-primary",
-    iconColor: "text-white",
-    value: "text-primary",
+    iconBg: "bg-ink",
+    iconColor: "text-paper",
+    value: "text-ink",
   },
   success: {
-    iconBg: "bg-success/10",
-    iconColor: "text-success",
-    value: "text-success",
+    iconBg: "bg-forest-100",
+    iconColor: "text-forest-500",
+    value: "text-forest-600",
   },
   warning: {
-    iconBg: "bg-accent-light",
-    iconColor: "text-accent",
-    value: "text-accent",
+    iconBg: "bg-marigold-100",
+    iconColor: "text-marigold-400",
+    value: "text-marigold-400",
   },
 };
 
@@ -45,23 +45,18 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "bg-surface rounded-xl p-4 shadow-card border border-border",
+        "bg-card rounded-[16px] p-4 border border-stone-200",
         className
       )}
     >
       {Icon && (
-        <div
-          className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center mb-3",
-            v.iconBg
-          )}
-        >
-          <Icon className={cn("w-4 h-4", v.iconColor)} />
+        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center mb-3", v.iconBg)}>
+          <Icon className={cn("w-4 h-4", v.iconColor)} strokeWidth={1.75} />
         </div>
       )}
-      <p className={cn("text-xl font-bold leading-none", v.value)}>{value}</p>
-      <p className="text-xs text-text-secondary mt-1 leading-tight">{label}</p>
-      {sub && <p className="text-xs text-success font-medium mt-1">{sub}</p>}
+      <p className={cn("text-xl font-bold leading-none tnum", v.value)}>{value}</p>
+      <p className="text-xs text-stone-400 mt-1 leading-tight">{label}</p>
+      {sub && <p className="text-xs text-forest-500 font-medium mt-1">{sub}</p>}
     </div>
   );
 }

@@ -5,22 +5,29 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
         primary:
-          "bg-primary text-white hover:bg-blue-700 hover:shadow-md",
-        secondary:
-          "bg-primary-light text-primary hover:bg-primary-mid",
+          "bg-ink text-paper hover:bg-ink/90",
+        azulejo:
+          "bg-azulejo-500 text-white hover:bg-azulejo-600",
+        marigold:
+          "bg-marigold-300 text-ink hover:bg-marigold-400",
         outline:
-          "border border-border bg-surface text-text-primary hover:bg-background",
+          "border border-stone-200 bg-transparent text-ink hover:bg-stone-100",
+        soft:
+          "bg-stone-100 text-ink hover:bg-stone-200",
         ghost:
-          "text-text-secondary hover:bg-background hover:text-text-primary",
+          "text-stone-500 hover:text-ink hover:bg-stone-100",
         danger:
-          "bg-danger text-white hover:bg-red-600 hover:shadow-md",
+          "bg-danger text-white hover:bg-red-700",
+        // Legacy aliases
+        secondary:
+          "bg-azulejo-100 text-azulejo-500 hover:bg-azulejo-200",
         accent:
-          "bg-accent text-white hover:bg-yellow-500 hover:shadow-md",
+          "bg-marigold-300 text-ink hover:bg-marigold-400",
       },
       size: {
         sm: "h-8 px-3 text-xs",

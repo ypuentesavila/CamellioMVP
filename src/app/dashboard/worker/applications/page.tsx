@@ -32,20 +32,20 @@ export default function WorkerApplicationsPage() {
     .sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status));
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8">
       <Navbar />
 
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <PageShell className="py-4">
           <Link
             href="/dashboard/worker"
-            className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors mb-3"
+            className="inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-ink transition-colors mb-3"
           >
             <ArrowLeft className="w-4 h-4" />
             Mi dashboard
           </Link>
-          <h1 className="text-xl font-bold text-text-primary">Mis postulaciones</h1>
-          <p className="text-sm text-text-secondary mt-0.5">
+          <h1 className="text-xl font-bold text-ink">Mis postulaciones</h1>
+          <p className="text-sm text-stone-500 mt-0.5">
             {myOffers.length} postulación{myOffers.length !== 1 ? "es" : ""}
           </p>
         </PageShell>
@@ -71,21 +71,21 @@ export default function WorkerApplicationsPage() {
                 <div
                   key={offer.id}
                   className={cn(
-                    "bg-surface rounded-xl p-4 shadow-card border transition-colors",
+                    "bg-card rounded-[16px] p-4 border transition-colors",
                     offer.status === "accepted"
-                      ? "border-success/30 bg-success/5"
-                      : "border-border"
+                      ? "border-forest-300 bg-forest-100/30"
+                      : "border-stone-200"
                   )}
                 >
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/trabajos/${offer.jobId}`}
-                        className="font-semibold text-text-primary text-sm hover:text-primary transition-colors truncate block"
+                        className="font-semibold text-ink text-sm hover:text-azulejo-500 transition-colors truncate block"
                       >
                         {job?.title ?? "Trabajo"}
                       </Link>
-                      <p className="text-xs text-text-secondary mt-0.5">
+                      <p className="text-xs text-stone-500 mt-0.5">
                         {job?.location} · {timeAgo(offer.createdAt)}
                       </p>
                     </div>
@@ -97,37 +97,37 @@ export default function WorkerApplicationsPage() {
 
                   {/* Pricing */}
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="flex-1 p-3 bg-background rounded-lg">
-                      <p className="text-xs text-text-secondary">Tu propuesta</p>
-                      <p className="text-sm font-bold text-text-primary">
+                    <div className="flex-1 p-3 bg-stone-100 rounded-xl">
+                      <p className="text-xs text-stone-500">Tu propuesta</p>
+                      <p className="text-sm font-bold text-ink tnum">
                         {formatCOP(offer.proposedPrice)}
                       </p>
                     </div>
                     {offer.counterOfferPrice && (
-                      <div className="flex-1 p-3 bg-primary-light rounded-lg">
-                        <p className="text-xs text-primary">Acordado</p>
-                        <p className="text-sm font-bold text-primary">
+                      <div className="flex-1 p-3 bg-azulejo-100 rounded-xl">
+                        <p className="text-xs text-azulejo-500">Acordado</p>
+                        <p className="text-sm font-bold text-azulejo-600 tnum">
                           {formatCOP(offer.counterOfferPrice)}
                         </p>
                       </div>
                     )}
-                    <div className="flex-1 p-3 bg-background rounded-lg">
-                      <p className="text-xs text-text-secondary">Duración</p>
-                      <p className="text-sm font-semibold text-text-primary">
+                    <div className="flex-1 p-3 bg-stone-100 rounded-xl">
+                      <p className="text-xs text-stone-500">Duración</p>
+                      <p className="text-sm font-semibold text-ink">
                         {offer.estimatedDuration}
                       </p>
                     </div>
                   </div>
 
                   {/* Message preview */}
-                  <p className="text-xs text-text-secondary italic leading-relaxed line-clamp-2 mb-3">
+                  <p className="text-xs text-stone-500 italic leading-relaxed line-clamp-2 mb-3">
                     &quot;{offer.message}&quot;
                   </p>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 pt-3 border-t border-border">
+                  <div className="flex items-center gap-2 pt-3 border-t border-stone-200">
                     <Link href={`/trabajos/${offer.jobId}`}>
-                      <Button variant="secondary" size="sm">Ver trabajo</Button>
+                      <Button variant="soft" size="sm">Ver trabajo</Button>
                     </Link>
                     {canWithdraw && (
                       <Button

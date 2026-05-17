@@ -34,16 +34,16 @@ export function StarDisplay({
             className={cn(
               sizes[size],
               i < Math.floor(value)
-                ? "fill-accent text-accent"
+                ? "fill-marigold-300 text-marigold-300"
                 : i < value
-                ? "fill-accent/40 text-accent/40"
-                : "text-border fill-none"
+                ? "fill-marigold-300/40 text-marigold-300/40"
+                : "text-stone-300 fill-none"
             )}
           />
         ))}
       </div>
       {showValue && (
-        <span className="text-sm font-semibold text-text-primary">
+        <span className="text-sm font-semibold text-ink">
           {value.toFixed(1)}
         </span>
       )}
@@ -86,7 +86,7 @@ export function StarPicker({
               type="button"
               onClick={() => onChange(star)}
               onMouseEnter={() => setHovered(star)}
-              className="transition-transform hover:scale-110 active:scale-95 focus:outline-none"
+              className="transition-transform hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-sm"
               aria-label={`${star} estrella${star > 1 ? "s" : ""}`}
             >
               <Star
@@ -94,8 +94,8 @@ export function StarPicker({
                   sizes[size],
                   "transition-colors",
                   star <= active
-                    ? "fill-accent text-accent"
-                    : "text-border fill-none"
+                    ? "fill-marigold-300 text-marigold-300"
+                    : "text-stone-300 fill-none"
                 )}
               />
             </button>
@@ -105,7 +105,7 @@ export function StarPicker({
       <p
         className={cn(
           "text-sm font-semibold transition-colors h-5",
-          active ? "text-accent" : "text-text-secondary"
+          active ? "text-marigold-400" : "text-stone-500"
         )}
       >
         {ratingLabels[active] ?? ""}

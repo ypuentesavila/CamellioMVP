@@ -30,10 +30,10 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-4 border-b border-border bg-surface shrink-0">
-        <h1 className="text-lg font-bold text-text-primary">Mensajes</h1>
+      <div className="px-4 py-4 border-b border-stone-200 bg-card shrink-0">
+        <h1 className="text-lg font-bold text-ink">Mensajes</h1>
         {!loading && chats.length > 0 && (
-          <p className="text-xs text-text-secondary mt-0.5">
+          <p className="text-xs text-stone-500 mt-0.5">
             {chats.length} conversación{chats.length !== 1 ? "es" : ""}
           </p>
         )}
@@ -70,17 +70,17 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
                 key={chat.id}
                 href={`/mensajes/${chat.id}`}
                 className={cn(
-                  "flex items-start gap-3 px-4 py-3.5 border-b border-border transition-colors",
+                  "flex items-start gap-3 px-4 py-3.5 border-b border-stone-100 transition-colors",
                   isActive
-                    ? "bg-primary-light border-l-2 border-l-primary"
-                    : "hover:bg-background"
+                    ? "bg-azulejo-100 border-l-2 border-l-azulejo-500"
+                    : "hover:bg-stone-50"
                 )}
               >
                 {/* Avatar + unread badge */}
                 <div className="relative shrink-0">
                   <Avatar name={other?.name ?? "?"} size="md" />
                   {unread > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-primary text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-ink text-paper text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
                       {unread > 9 ? "9+" : unread}
                     </span>
                   )}
@@ -93,14 +93,14 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
                       className={cn(
                         "text-sm truncate",
                         unread > 0
-                          ? "font-bold text-text-primary"
-                          : "font-semibold text-text-primary"
+                          ? "font-bold text-ink"
+                          : "font-semibold text-ink"
                       )}
                     >
                       {other?.name ?? "Usuario"}
                     </p>
                     {chat.lastMessageAt && (
-                      <p className="text-xs text-text-secondary shrink-0">
+                      <p className="text-xs text-stone-400 shrink-0">
                         {timeAgo(chat.lastMessageAt)}
                       </p>
                     )}
@@ -108,7 +108,7 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
 
                   {/* Job tag */}
                   {job && (
-                    <p className="text-xs text-primary font-medium truncate mt-0.5">
+                    <p className="text-xs text-azulejo-500 font-medium truncate mt-0.5">
                       {job.title}
                     </p>
                   )}
@@ -118,8 +118,8 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
                     className={cn(
                       "text-xs truncate mt-0.5",
                       unread > 0
-                        ? "text-text-primary font-medium"
-                        : "text-text-secondary"
+                        ? "text-ink font-medium"
+                        : "text-stone-500"
                     )}
                   >
                     {chat.lastMessage ?? "Inicia una conversación"}

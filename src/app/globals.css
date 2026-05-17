@@ -2,16 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── CSS custom properties — mirrors Tailwind tokens ───────────────────────── */
+:root {
+  /* Base */
+  --color-paper: #F7F2E6;
+  --color-paper-2: #ECE0C5;
+  --color-card: #FBF8EF;
+  --color-ink: #1E2A3A;
+
+  /* Stone */
+  --color-stone-100: #E5DFCD;
+  --color-stone-200: #D6CFBC;
+  --color-stone-300: #B5B0A0;
+  --color-stone-400: #928E80;
+  --color-stone-500: #6E6A5E;
+  --color-stone-600: #4A5160;
+
+  /* Azulejo */
+  --color-azulejo-100: #D6E2F2;
+  --color-azulejo-200: #B6CCE8;
+  --color-azulejo-300: #6E95D2;
+  --color-azulejo-400: #3C6EBF;
+  --color-azulejo-500: #234478;
+  --color-azulejo-600: #1B3358;
+
+  /* Marigold */
+  --color-marigold-100: #FAE5B8;
+  --color-marigold-200: #F6C56A;
+  --color-marigold-300: #F3B033;
+  --color-marigold-400: #B07816;
+  --color-marigold-500: #7E5210;
+
+  /* Forest */
+  --color-forest-100: #D8E6D5;
+  --color-forest-500: #3D7A4B;
+  --color-forest-600: #2E5E3A;
+
+  /* Amber */
+  --color-amber-100: #F2D7A3;
+  --color-amber-500: #B26B1A;
+
+  /* Motion */
+  --ease-sabana: cubic-bezier(.2,.7,.3,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────────── */
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-background text-text-primary font-sans antialiased;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    @apply bg-paper text-ink antialiased;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
   }
+
+  /* Prevent double-tap zoom on interactive elements */
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
 }
 
+/* ── Typography helpers ─────────────────────────────────────────────────────── */
+.serif {
+  font-family: var(--font-serif), Georgia, serif;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* ── Tailwind component layer ───────────────────────────────────────────────── */
 @layer components {
   /* Typography scale */
   .text-display {
@@ -35,15 +105,15 @@
   }
 
   .text-body {
-    @apply text-base leading-relaxed text-text-primary;
+    @apply text-base leading-relaxed text-ink;
   }
 
   .text-body-sm {
-    @apply text-sm leading-relaxed text-text-secondary;
+    @apply text-sm leading-relaxed text-stone-500;
   }
 
   .text-caption {
-    @apply text-xs text-text-secondary leading-normal;
+    @apply text-xs text-stone-500 leading-normal;
   }
 
   /* Card hover lift */
@@ -51,9 +121,12 @@
     @apply transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
   }
 
-  /* Safe area bottom padding for mobile nav */
+  /* Safe area — mobile nav */
   .pb-safe {
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+  .pt-safe {
+    padding-top: max(0rem, env(safe-area-inset-top));
   }
 
   /* Section spacing */
@@ -65,7 +138,7 @@
     @apply py-8 sm:py-12;
   }
 
-  /* Hide scrollbar — horizontal snap lists */
+  /* Horizontal scroll */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -73,8 +146,60 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  /* Eyebrow label */
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-widest text-stone-500;
+  }
 }
 
+/* ── Skeleton shimmer ───────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-stone-100) 25%,
+    var(--color-stone-200) 50%,
+    var(--color-stone-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ── Placeholder stripes (empty state decorative areas) ─────────────────────── */
+.placeholder-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(30, 42, 58, 0.035) 8px,
+    rgba(30, 42, 58, 0.035) 16px
+  );
+}
+
+/* ── Soft pulse (live indicators, online dots) ──────────────────────────────── */
+@keyframes softpulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.softpulse {
+  animation: softpulse 2s var(--ease-sabana) infinite;
+}
+
+/* ── Fade-in ────────────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -87,5 +212,42 @@
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.35s ease-out both;
+  animation: fadeIn 0.35s var(--ease-sabana) both;
+}
+
+/* ── Marigold pulse — single cycle for accepted proposals ───────────────────── */
+@keyframes marigold-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 176, 51, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(243, 176, 51, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(243, 176, 51, 0);
+  }
+}
+
+.pulse-marigold-once {
+  animation: marigold-pulse 0.6s ease-out 1;
+}
+
+/* ── Number tabular ─────────────────────────────────────────────────────────── */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

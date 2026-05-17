@@ -18,15 +18,15 @@ export default function ChatPage({ params }: ChatPageProps) {
   if (!chat) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 p-8 text-center">
-        <div className="w-14 h-14 bg-surface rounded-full border border-border flex items-center justify-center mb-3">
-          <MessageSquare className="w-7 h-7 text-border" />
+        <div className="w-14 h-14 bg-card rounded-full border border-stone-200 flex items-center justify-center mb-3">
+          <MessageSquare className="w-7 h-7 text-stone-200" />
         </div>
-        <p className="text-sm font-semibold text-text-primary">
+        <p className="text-sm font-semibold text-ink">
           Conversación no encontrada
         </p>
         <Link
           href="/mensajes"
-          className="text-xs text-primary font-medium mt-2 hover:underline"
+          className="text-xs text-azulejo-500 font-medium mt-2 hover:underline"
         >
           ← Volver a mensajes
         </Link>

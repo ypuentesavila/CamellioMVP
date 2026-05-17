@@ -53,7 +53,7 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 
           {/* Panel — always centered, scale fade on all screen sizes */}
           <motion.div
-            className="relative bg-surface rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="relative bg-card rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl"
             initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.96, opacity: 0 }}

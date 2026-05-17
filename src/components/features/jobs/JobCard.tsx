@@ -42,53 +42,45 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
 
   const cardContent = (
     <>
-      {/* Header */}
       <div className="flex items-start justify-between gap-2 mb-3">
-        <Badge variant={urgency.variant} size="sm">
-          {urgency.label}
-        </Badge>
-        <span className="text-sm font-bold text-primary shrink-0">
+        <Badge variant={urgency.variant} size="sm">{urgency.label}</Badge>
+        <span className="text-sm font-bold text-ink shrink-0 tnum">
           {formatCOPShort(job.budget.min)}–{formatCOPShort(job.budget.max)}
         </span>
       </div>
 
-      {/* Title */}
-      <h3 className={cn("font-semibold text-text-primary leading-snug", isCompact ? "text-sm" : "text-base")}>
+      <h3 className={cn("font-semibold text-ink leading-snug", isCompact ? "text-sm" : "text-base")}>
         {isCompact
           ? job.title.length > 48 ? job.title.slice(0, 48) + "…" : job.title
           : job.title}
       </h3>
 
-      {/* Description — full variant only */}
       {!isCompact && (
-        <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 mt-1">
+        <p className="text-sm text-stone-500 leading-relaxed line-clamp-2 mt-1">
           {job.description}
         </p>
       )}
 
-      {/* Meta */}
-      <div className="flex items-center gap-1.5 text-text-secondary mt-2">
-        <MapPin className="w-3.5 h-3.5 shrink-0" />
+      <div className="flex items-center gap-1.5 text-stone-400 mt-2">
+        <MapPin className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
         <span className="text-xs">{job.location}</span>
-        <span className="text-xs text-border">·</span>
+        <span className="text-xs text-stone-200">·</span>
         <span className="text-xs">{timeAgo(job.createdAt)}</span>
       </div>
 
-      {/* Footer */}
-      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-text-secondary">
-          <Users className="w-3.5 h-3.5" />
+      <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 text-stone-400">
+          <Users className="w-3.5 h-3.5" strokeWidth={1.5} />
           <span className="text-xs">
             {job.offerCount} propuesta{job.offerCount !== 1 ? "s" : ""}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Always show details link on full variant */}
           {!isCompact && (
             <Link
               href={`/trabajos/${job.id}`}
-              className="text-xs text-text-secondary hover:text-text-primary transition-colors"
+              className="text-xs text-stone-400 hover:text-ink transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               Ver detalles
@@ -107,7 +99,7 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
             ) : (
               <button
                 onClick={(e) => { e.stopPropagation(); e.preventDefault(); onApply?.(job); }}
-                className="flex items-center gap-0.5 text-xs font-semibold text-primary hover:gap-1.5 transition-all duration-150"
+                className="flex items-center gap-0.5 text-xs font-semibold text-ink hover:gap-1.5 transition-all duration-150"
               >
                 Postularme
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -115,24 +107,19 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
             )
           )}
 
-          {/* Compact: show details arrow */}
           {isCompact && !isWorker && (
-            <ChevronRight className="w-3.5 h-3.5 text-border" />
+            <ChevronRight className="w-3.5 h-3.5 text-stone-300" />
           )}
         </div>
       </div>
     </>
   );
 
-  // Compact cards are wrapped in a Link to navigate to job detail
   if (isCompact) {
     return (
       <Link
         href={`/trabajos/${job.id}`}
-        className={cn(
-          "block bg-surface rounded-xl border border-border shadow-card card-hover",
-          "flex-shrink-0 w-64 snap-start p-4"
-        )}
+        className="block bg-card rounded-[16px] border border-stone-200 shadow-card card-hover flex-shrink-0 w-64 snap-start p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
       >
         {cardContent}
       </Link>
@@ -140,7 +127,7 @@ export function JobCard({ job, variant = "compact", onApply }: JobCardProps) {
   }
 
   return (
-    <div className="bg-surface rounded-xl border border-border shadow-card w-full p-5 card-hover">
+    <div className="bg-card rounded-[16px] border border-stone-200 shadow-card w-full p-5 card-hover">
       {cardContent}
     </div>
   );

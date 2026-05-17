@@ -92,47 +92,47 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
       {success ? (
         /* ── Success state ── */
         <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-          <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle className="w-8 h-8 text-success" strokeWidth={2} />
+          <div className="w-16 h-16 bg-forest-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-8 h-8 text-forest-500" strokeWidth={2} />
           </div>
-          <h2 className="text-xl font-bold text-text-primary mb-2">
+          <h2 className="text-xl font-bold text-ink mb-2">
             ¡Postulación enviada!
           </h2>
-          <p className="text-sm text-text-secondary leading-relaxed max-w-xs">
+          <p className="text-sm text-stone-500 leading-relaxed max-w-xs">
             El empleador verá tu propuesta y podrá aceptarla, negociar o contactarte.
           </p>
         </div>
       ) : (
         <>
           {/* ── Header ── */}
-          <div className="flex items-start justify-between p-5 border-b border-border">
+          <div className="flex items-start justify-between p-5 border-b border-stone-200">
             <div className="min-w-0 pr-3">
-              <h2 className="font-bold text-text-primary text-lg leading-tight">
+              <h2 className="font-bold text-ink text-lg leading-tight">
                 Enviar propuesta
               </h2>
               {job && (
-                <p className="text-sm text-text-secondary mt-0.5 line-clamp-1">
+                <p className="text-sm text-stone-500 mt-0.5 line-clamp-1">
                   {job.title}
                 </p>
               )}
             </div>
             <button
               onClick={handleClose}
-              className="shrink-0 p-1.5 rounded-lg hover:bg-background transition-colors"
+              className="shrink-0 -m-1 p-2.5 rounded-xl hover:bg-stone-100 transition-colors"
               aria-label="Cerrar"
             >
-              <X className="w-5 h-5 text-text-secondary" />
+              <X className="w-5 h-5 text-stone-500" />
             </button>
           </div>
 
           {/* ── Budget hint ── */}
           {job && (
             <div className="px-5 pt-4">
-              <div className="bg-primary-light rounded-xl px-4 py-3 flex items-center justify-between">
-                <span className="text-sm text-primary font-medium">
+              <div className="bg-azulejo-100 rounded-xl px-4 py-3 flex items-center justify-between">
+                <span className="text-sm text-azulejo-500 font-medium">
                   Rango del empleador
                 </span>
-                <span className="text-sm font-bold text-primary">
+                <span className="text-sm font-bold text-azulejo-600 tnum">
                   {formatCOPShort(job.budget.min)} – {formatCOPShort(job.budget.max)}
                 </span>
               </div>
@@ -143,19 +143,19 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
           <div className="p-5 flex flex-col gap-5">
             {/* Price */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-1.5">
+              <label className="block text-sm font-semibold text-ink mb-1.5">
                 Tu precio propuesto
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-secondary font-semibold text-sm pointer-events-none">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500 font-semibold text-sm pointer-events-none">
                   $
                 </span>
                 <input
                   type="number"
                   value={price}
                   onChange={(e) => { setPrice(e.target.value); clearError("price"); }}
-                  className={`w-full pl-8 pr-4 py-2.5 rounded-xl border text-sm font-semibold text-text-primary bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors ${
-                    errors.price ? "border-danger" : "border-border focus:border-primary"
+                  className={`w-full pl-8 pr-4 py-2.5 rounded-xl border text-sm font-semibold text-ink bg-card focus:outline-none focus:ring-2 focus:ring-ink/20 transition-colors tnum ${
+                    errors.price ? "border-danger" : "border-stone-200 focus:border-ink"
                   }`}
                   placeholder={job ? String(job.budget.min) : "0"}
                   min={1}
@@ -164,7 +164,7 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
               {errors.price ? (
                 <p className="text-xs text-danger mt-1">{errors.price}</p>
               ) : price && Number(price) > 0 ? (
-                <p className="text-xs text-text-secondary mt-1">
+                <p className="text-xs text-stone-500 mt-1 tnum">
                   {formatCOP(Number(price))} COP
                 </p>
               ) : null}
@@ -172,14 +172,14 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
 
             {/* Duration */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-1.5">
+              <label className="block text-sm font-semibold text-ink mb-1.5">
                 Duración estimada
               </label>
               <select
                 value={duration}
                 onChange={(e) => { setDuration(e.target.value); clearError("duration"); }}
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-text-primary bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors ${
-                  errors.duration ? "border-danger" : "border-border focus:border-primary"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-ink bg-card focus:outline-none focus:ring-2 focus:ring-ink/20 transition-colors ${
+                  errors.duration ? "border-danger" : "border-stone-200 focus:border-ink"
                 }`}
               >
                 <option value="">Selecciona una opción...</option>
@@ -194,14 +194,14 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
 
             {/* Message */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-1.5">
+              <label className="block text-sm font-semibold text-ink mb-1.5">
                 Mensaje al empleador
               </label>
               <textarea
                 value={message}
                 onChange={(e) => { setMessage(e.target.value); clearError("message"); }}
-                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-text-primary bg-surface focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors resize-none leading-relaxed ${
-                  errors.message ? "border-danger" : "border-border focus:border-primary"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-sm text-ink bg-card focus:outline-none focus:ring-2 focus:ring-ink/20 transition-colors resize-none leading-relaxed ${
+                  errors.message ? "border-danger" : "border-stone-200 focus:border-ink"
                 }`}
                 placeholder="Describe tu experiencia, herramientas y disponibilidad. Cuéntale por qué eres la mejor opción..."
                 rows={4}
@@ -210,7 +210,7 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
                 <p className="text-xs text-danger">{errors.message ?? ""}</p>
                 <p
                   className={`text-xs shrink-0 ${
-                    message.length >= 30 ? "text-success" : "text-text-secondary"
+                    message.length >= 30 ? "text-forest-500" : "text-stone-400"
                   }`}
                 >
                   {message.length} / 30 mín
@@ -230,7 +230,7 @@ export function ApplyModal({ job, onClose }: ApplyModalProps) {
               {submitting ? "Enviando propuesta..." : "Enviar propuesta"}
             </Button>
 
-            <p className="text-xs text-text-secondary text-center -mt-2">
+            <p className="text-xs text-stone-400 text-center -mt-2">
               El empleador verá tu calificación y perfil junto con esta propuesta.
             </p>
           </div>

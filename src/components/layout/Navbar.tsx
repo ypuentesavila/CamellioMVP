@@ -30,14 +30,14 @@ export function Navbar() {
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm shadow-nav">
+    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm shadow-nav">
       <PageShell>
         <div className="flex h-16 items-center justify-between gap-4">
 
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
-            <span className="text-xl font-bold text-primary tracking-tight">
-              Camellio
+            <span className="text-xl font-bold text-ink tracking-tight">
+              camellio
             </span>
           </Link>
 
@@ -50,8 +50,8 @@ export function Navbar() {
                 className={cn(
                   "text-sm font-medium transition-colors",
                   isNavActive(link.href, pathname)
-                    ? "text-primary"
-                    : "text-text-secondary hover:text-text-primary"
+                    ? "text-ink"
+                    : "text-stone-500 hover:text-ink"
                 )}
               >
                 {link.label}
@@ -74,14 +74,14 @@ export function Navbar() {
                 {/* User pill */}
                 <Link
                   href={`/perfil/${user.id}`}
-                  className="flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-xl hover:bg-background transition-colors"
+                  className="flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-xl hover:bg-paper transition-colors"
                 >
                   <Avatar name={user.name} size="sm" />
                   <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-text-primary leading-none">
+                    <span className="text-sm font-semibold text-ink leading-none">
                       {user.name.split(" ")[0]}
                     </span>
-                    <span className="text-xs text-text-secondary capitalize leading-none mt-0.5">
+                    <span className="text-xs text-stone-500 capitalize leading-none mt-0.5">
                       {user.role === "worker" ? "Trabajador" : "Empleador"}
                     </span>
                   </div>
@@ -113,13 +113,13 @@ export function Navbar() {
               </Link>
             )}
             <button
-              className="flex items-center justify-center h-10 w-10 rounded-xl hover:bg-background transition-colors"
+              className="flex items-center justify-center h-10 w-10 rounded-xl hover:bg-paper transition-colors"
               onClick={() => setMobileOpen((prev) => !prev)}
               aria-label="Toggle menu"
             >
               {mobileOpen
-                ? <X className="h-5 w-5 text-text-primary" />
-                : <Menu className="h-5 w-5 text-text-primary" />}
+                ? <X className="h-5 w-5 text-ink" />
+                : <Menu className="h-5 w-5 text-ink" />}
             </button>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function Navbar() {
       <div
         className={cn(
           "md:hidden overflow-hidden transition-all duration-200",
-          mobileOpen ? "max-h-96 border-t border-border" : "max-h-0"
+          mobileOpen ? "max-h-96 border-t border-stone-200" : "max-h-0"
         )}
       >
         <PageShell>
@@ -144,8 +144,8 @@ export function Navbar() {
                   className={cn(
                     "px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
                     isNavActive(link.href, pathname)
-                      ? "bg-primary-light text-primary"
-                      : "text-text-secondary hover:text-text-primary hover:bg-background"
+                      ? "bg-azulejo-100 text-ink"
+                      : "text-stone-500 hover:text-ink hover:bg-paper"
                   )}
                 >
                   {link.label}
@@ -153,7 +153,7 @@ export function Navbar() {
               ))}
 
             {/* Auth actions */}
-            <div className={cn("flex flex-col gap-2", !isAuthenticated && "pt-3 border-t border-border mt-2")}>
+            <div className={cn("flex flex-col gap-2", !isAuthenticated && "pt-3 border-t border-stone-200 mt-2")}>
               {isAuthenticated ? (
                 <>
                   {isEmployer && (

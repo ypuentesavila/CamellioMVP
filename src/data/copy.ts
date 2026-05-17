@@ -1,0 +1,280 @@
+export const copy = {
+  brand: {
+    name: "camellio",
+    nameFormal: "Camellio",
+    tagline: "Trabajadores locales para lo que necesitas resolver.",
+    taglineShort: "Para lo que necesitas resolver.",
+    description:
+      "Encuentra trabajadores de confianza para lo que necesitas resolver en Bogotá.",
+    location: "Bogotá, Colombia",
+    contact: "soporte@camellio.co",
+  },
+
+  nav: {
+    inicio: "Inicio",
+    explorar: "Explorar trabajadores",
+    publicar: "Publicar solicitud",
+    comoFunciona: "Cómo funciona",
+    mensajes: "Mensajes",
+    solicitudes: "Solicitudes",
+    yo: "Yo",
+    sobreNosotros: "Sobre nosotros",
+  },
+
+  auth: {
+    login: {
+      title: "Bienvenido de vuelta",
+      eyebrow: "Accede a tu cuenta",
+      email: "Correo electrónico",
+      password: "Contraseña",
+      cta: "Entrar",
+      forgotPassword: "¿Olvidaste tu contraseña?",
+      noAccount: "¿No tienes cuenta?",
+      register: "Regístrate",
+      worker: "Soy trabajador",
+      client: "Soy cliente",
+    },
+    register: {
+      title: "Crea tu cuenta",
+      eyebrow: "Únete a Camellio",
+      selectRole: "¿Qué quieres hacer en Camellio?",
+      asClient: "Soy cliente",
+      asClientDesc: "Busco trabajadores para resolver algo en mi hogar o negocio.",
+      asWorker: "Soy trabajador",
+      asWorkerDesc: "Ofrezco mis servicios a clientes en Bogotá.",
+      cta: "Crear cuenta",
+      hasAccount: "¿Ya tienes cuenta?",
+      login: "Inicia sesión",
+    },
+    onboarding: {
+      client: {
+        title: "Un último paso",
+        eyebrow: "Configura tu perfil",
+        nameLabel: "Nombre completo",
+        phonelabel: "Celular",
+        zoneLabel: "¿En qué zona de Bogotá estás?",
+        cta: "Empezar",
+      },
+      worker: {
+        steps: ["Identidad", "Oficios y zona", "Experiencia y tarifa", "Verificación"],
+        step1: {
+          title: "Cuéntanos de ti",
+          eyebrow: "Paso 1 de 4",
+          nameLabel: "Nombre completo",
+          cedulaLabel: "Número de cédula",
+          phoneLabel: "Celular",
+          emailLabel: "Correo electrónico",
+          privacyNote:
+            "Tu cédula y celular son privados. Los usamos para verificar tu identidad.",
+        },
+        step2: {
+          title: "Tus servicios y zona",
+          eyebrow: "Paso 2 de 4",
+          categoriesLabel: "¿Qué servicios ofreces?",
+          categoriesHint: "Selecciona hasta 3 oficios.",
+          zoneLabel: "¿En qué zona trabajas?",
+          radiusLabel: "Radio de desplazamiento",
+        },
+        step3: {
+          title: "Experiencia y tarifa",
+          eyebrow: "Paso 3 de 4",
+          yearsLabel: "Años de experiencia",
+          rateLabel: "Tarifa por hora",
+          rateBenchmark: "El promedio en tu oficio es $65.000/h",
+          availabilityLabel: "Días disponibles",
+        },
+        step4: {
+          title: "Verifica tu identidad",
+          eyebrow: "Paso 4 de 4",
+          photoLabel: "Foto de perfil",
+          photoHint: "Una foto clara de tu cara. No de perfil ni con gafas oscuras.",
+          idCard: "Cédula de ciudadanía",
+          selfie: "Selfie con cédula",
+          background: "Antecedentes judiciales",
+          statusDone: "Listo",
+          statusPending: "Pendiente",
+          statusCurrent: "Ahora",
+          cta: "Terminar registro",
+        },
+      },
+    },
+    welcome: {
+      eyebrow: "Todo listo",
+      title: "Tu perfil está activo",
+      subtitle: "Empieza a recibir solicitudes en tu zona.",
+    },
+  },
+
+  jobs: {
+    post: {
+      title: "Publica tu solicitud",
+      eyebrow: "Nueva solicitud",
+      step1: {
+        title: "¿Qué necesitas?",
+        titleLabel: "Describe lo que necesitas",
+        descriptionLabel: "Más detalles (opcional)",
+        categoryLabel: "Categoría",
+        locationLabel: "Dirección o zona",
+        aiHint: "Camellio entiende tu problema — describe lo que pasó y sugerimos el trabajador ideal.",
+      },
+      step2: {
+        title: "Cuánto y cuándo",
+        budgetLabel: "Rango de presupuesto",
+        budgetBenchmark: "El promedio para este tipo de trabajo es $120.000",
+        urgencyLabel: "¿Para cuándo lo necesitas?",
+        urgencyUrgent: "Urgente",
+        urgencyWeek: "Esta semana",
+        urgencyFlexible: "Flexible",
+        photosLabel: "Fotos del problema (opcional)",
+        photosHint: "Hasta 6 fotos. Ayuda a los trabajadores a cotizar mejor.",
+      },
+      step3: {
+        title: "Confirma tu solicitud",
+        liveTime: "Tu solicitud estará activa por 14 días.",
+        cta: "Publicar solicitud",
+      },
+    },
+    status: {
+      open: "Publicada",
+      inProgress: "En progreso",
+      completed: "Completada",
+      cancelled: "Cancelada",
+      expired: "Expirada",
+    },
+    urgency: {
+      urgent: "Urgente",
+      this_week: "Esta semana",
+      flexible: "Flexible",
+    },
+    labels: {
+      proposals: "propuestas",
+      proposal: "propuesta",
+      postedAt: "Publicada hace",
+      budget: "Presupuesto",
+      viewRequest: "Ver solicitud",
+      publishedFor: "Solicitud publicada",
+      activeFor: "Activa por",
+    },
+  },
+
+  workers: {
+    labels: {
+      availableToday: "Disponible hoy",
+      availableTomorrow: "Disponible mañana",
+      availableThisWeek: "Disponible esta semana",
+      notAvailable: "No disponible",
+      verified: "Trabajador verificado",
+      maestro: "Maestro Camellio",
+      identityVerified: "Identidad verificada",
+      responseTime: "Responde en",
+      yearsExp: "años de experiencia",
+      ratePerHour: "/hora",
+      invite: "Invitar a mi solicitud",
+      apply: "Postularme",
+      viewProfile: "Ver perfil",
+      distance: "km",
+    },
+    apply: {
+      cta: "Postularme",
+      ctaWithPrice: (price: string) => `Postularme · ${price}`,
+      sent: "Propuesta enviada",
+    },
+  },
+
+  proposals: {
+    status: {
+      pending: "Enviada",
+      accepted: "Aceptada",
+      rejected: "Rechazada",
+      withdrawn: "Retirada",
+      negotiating: "Negociando",
+    },
+    labels: {
+      accept: "Aceptar",
+      negotiate: "Negociar",
+      reject: "Rechazar",
+      withdraw: "Retirar",
+      guarantee: "Garantía 30 días",
+      bestMatch: "Mejor match",
+      topWorker: "Trabajador destacado",
+    },
+    received: (n: number) =>
+      n === 1 ? "1 propuesta recibida" : `${n} propuestas recibidas`,
+  },
+
+  chat: {
+    placeholder: "Escribe un mensaje...",
+    send: "Enviar",
+    online: "En línea",
+    offline: "Desconectado",
+    typing: "Escribiendo...",
+    relatedTo: "Solicitud relacionada",
+  },
+
+  empty: {
+    noJobs: {
+      eyebrow: "Sin solicitudes aún",
+      title: "Aquí aparecerán tus solicitudes",
+      description: "Publica tu primera solicitud y recibe propuestas de trabajadores en tu zona.",
+      cta: "Publicar solicitud",
+    },
+    noProposals: {
+      eyebrow: "Sin propuestas",
+      title: "Ningún trabajador se ha postulado",
+      description: "Los trabajadores en tu zona verán tu solicitud pronto.",
+      cta: "Explorar trabajadores",
+    },
+    noMessages: {
+      eyebrow: "Sin mensajes",
+      title: "No hay conversaciones activas",
+      description: "Cuando aceptes una propuesta, el chat aparece aquí.",
+      cta: "Ver mis solicitudes",
+    },
+    noResults: {
+      eyebrow: "Sin resultados",
+      title: "No encontramos trabajadores con ese filtro",
+      description: "Intenta con otros filtros o amplía la zona de búsqueda.",
+      cta: "Limpiar filtros",
+    },
+    noApplications: {
+      eyebrow: "Sin postulaciones",
+      title: "No te has postulado a ninguna solicitud",
+      description: "Explora las solicitudes disponibles en tu zona y empieza a ganar.",
+      cta: "Explorar solicitudes",
+    },
+  },
+
+  errors: {
+    required: "Este campo es obligatorio.",
+    invalidEmail: "Ingresa un correo válido.",
+    invalidPhone: "Ingresa un número de celular válido.",
+    minLength: (n: number) => `Mínimo ${n} caracteres.`,
+    maxLength: (n: number) => `Máximo ${n} caracteres.`,
+    generic: "Algo salió mal. Intenta de nuevo.",
+  },
+
+  trust: {
+    guarantee: "Garantía de 30 días",
+    guaranteeDesc:
+      "Si el trabajo no queda bien, te buscamos otro trabajador sin costo adicional.",
+    verification: "Trabajadores verificados",
+    verificationDesc:
+      "Verificamos identidad, antecedentes y experiencia de cada trabajador.",
+    maestro: "Maestros Camellio",
+    maestroDesc:
+      "Los mejores trabajadores de la plataforma, con historial probado y calificaciones top.",
+  },
+
+  cta: {
+    publishRequest: "Publicar solicitud",
+    exploreWorkers: "Explorar trabajadores",
+    imAWorker: "Soy trabajador",
+    viewMore: "Ver más",
+    continue: "Continuar",
+    goBack: "Volver",
+    cancel: "Cancelar",
+    save: "Guardar",
+    done: "Listo",
+    close: "Cerrar",
+  },
+} as const;

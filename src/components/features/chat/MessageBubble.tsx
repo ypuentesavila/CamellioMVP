@@ -18,7 +18,7 @@ export function MessageBubble({ message, isOwn }: MessageBubbleProps) {
   if (message.type === "system" || message.type === "offer_update") {
     return (
       <div className="flex justify-center my-3">
-        <span className="text-xs text-text-secondary bg-background border border-border px-3 py-1 rounded-full">
+        <span className="text-xs text-stone-500 bg-paper border border-stone-200 px-3 py-1 rounded-full">
           {message.content}
         </span>
       </div>
@@ -42,13 +42,13 @@ export function MessageBubble({ message, isOwn }: MessageBubbleProps) {
           className={cn(
             "px-4 py-2.5 text-sm leading-relaxed break-words",
             isOwn
-              ? "bg-primary text-white rounded-2xl rounded-br-sm"
-              : "bg-surface border border-border text-text-primary rounded-2xl rounded-bl-sm shadow-card"
+              ? "bg-ink text-paper rounded-2xl rounded-br-sm"
+              : "bg-card border border-stone-200 text-ink rounded-2xl rounded-bl-sm shadow-card"
           )}
         >
           {message.content}
         </div>
-        <p className="text-xs text-text-secondary mt-1 px-1">
+        <p className="text-xs text-stone-400 mt-1 px-1">
           {formatTime(message.createdAt)}
         </p>
       </div>

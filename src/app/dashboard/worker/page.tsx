@@ -113,21 +113,21 @@ export default function WorkerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-8 animate-fade-in">
+    <div className="min-h-screen bg-paper pb-20 md:pb-8 animate-fade-in">
       <Navbar />
 
       {/* ── Greeting ── */}
-      <div className="bg-surface border-b border-border">
+      <div className="bg-card border-b border-stone-200">
         <PageShell className="py-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-text-secondary">Buenos días</p>
-              <h1 className="text-xl font-bold text-text-primary mt-0.5">
+              <p className="text-sm text-stone-500">Buenos días</p>
+              <h1 className="text-xl font-bold text-ink mt-0.5">
                 {displayName}
               </h1>
               <div className="flex items-center gap-1.5 mt-1.5">
-                <MapPin className="w-3.5 h-3.5 text-text-secondary" />
-                <span className="text-sm text-text-secondary">{displayLocation}</span>
+                <MapPin className="w-3.5 h-3.5 text-stone-500" />
+                <span className="text-sm text-stone-500">{displayLocation}</span>
               </div>
               <div className="mt-2">
                 <Badge variant="success" dot size="sm">
@@ -138,11 +138,11 @@ export default function WorkerDashboardPage() {
             <div className="flex flex-col items-end gap-2 shrink-0">
               <Avatar name={displayName} size="xl" />
               <div className="flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 fill-accent text-accent" />
-                <span className="text-sm font-semibold text-text-primary">
+                <Star className="w-3.5 h-3.5 fill-marigold-300 text-marigold-300" />
+                <span className="text-sm font-semibold text-ink tnum">
                   {displayRating}
                 </span>
-                <span className="text-xs text-text-secondary">
+                <span className="text-xs text-stone-500 tnum">
                   ({displayReviews})
                 </span>
               </div>
@@ -193,7 +193,7 @@ export default function WorkerDashboardPage() {
               icon={Search}
               title="Sin trabajos disponibles"
               description="No hay trabajos en tu zona ahora mismo. Vuelve más tarde o explora otras categorías."
-              action={{ label: "Explorar todos", href: "/explorar", variant: "secondary" }}
+              action={{ label: "Explorar todos", href: "/explorar", variant: "soft" }}
             />
           </PageShell>
         ) : (
@@ -232,17 +232,17 @@ export default function WorkerDashboardPage() {
             {activeJobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-surface rounded-xl p-4 shadow-card border border-border"
+                className="bg-card rounded-[16px] p-4 border border-stone-200"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-semibold text-text-primary text-sm truncate">
+                    <p className="font-semibold text-ink text-sm truncate">
                       {job.title}
                     </p>
-                    <p className="text-xs text-text-secondary mt-0.5">
+                    <p className="text-xs text-stone-500 mt-0.5">
                       {job.employer} · {job.location}
                     </p>
-                    <p className="text-xs font-semibold text-primary mt-1">
+                    <p className="text-xs font-semibold text-ink tnum mt-1">
                       {formatCOP(job.agreedPrice)}
                     </p>
                   </div>
@@ -250,9 +250,9 @@ export default function WorkerDashboardPage() {
                     En progreso
                   </Badge>
                 </div>
-                <div className="mt-3 pt-3 border-t border-border flex items-center gap-2">
+                <div className="mt-3 pt-3 border-t border-stone-200 flex items-center gap-2">
                   <Link href={`/trabajos/${job.jobId ?? job.id}`}>
-                    <Button variant="secondary" size="sm">
+                    <Button variant="soft" size="sm">
                       Ver detalles
                     </Button>
                   </Link>
@@ -296,26 +296,26 @@ export default function WorkerDashboardPage() {
               return (
                 <div
                   key={offer.id}
-                  className="bg-surface rounded-xl p-4 shadow-card border border-border flex items-center justify-between gap-3"
+                  className="bg-card rounded-[16px] p-4 border border-stone-200 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <p className="font-semibold text-text-primary text-sm truncate">
+                    <p className="font-semibold text-ink text-sm truncate">
                       {relatedJob?.title ?? "Trabajo"}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-primary font-semibold">
+                      <span className="text-xs text-ink font-semibold tnum">
                         {formatCOP(offer.proposedPrice)}
                       </span>
                       {offer.counterOfferPrice && (
                         <>
-                          <span className="text-xs text-border">→</span>
-                          <span className="text-xs text-accent font-semibold">
+                          <span className="text-xs text-stone-200">→</span>
+                          <span className="text-xs text-marigold-400 font-semibold tnum">
                             {formatCOP(offer.counterOfferPrice)}
                           </span>
                         </>
                       )}
                     </div>
-                    <p className="text-xs text-text-secondary mt-0.5">
+                    <p className="text-xs text-stone-500 mt-0.5">
                       {relatedJob?.location} · {timeAgo(offer.createdAt)}
                     </p>
                   </div>
@@ -336,7 +336,7 @@ export default function WorkerDashboardPage() {
           title="Resumen de ingresos"
           action={{ label: "Ver detalle", href: "/dashboard/worker" }}
         />
-        <div className="bg-surface rounded-xl p-5 shadow-card border border-border">
+        <div className="bg-card rounded-[16px] p-5 border border-stone-200">
           <div className="grid grid-cols-2 gap-4">
             {[
               { label: "Este mes", value: formatCOP(340000), trend: "+12%" },
@@ -344,13 +344,13 @@ export default function WorkerDashboardPage() {
               { label: "Trabajos completados", value: String(displayCompleted), trend: null },
               { label: "Promedio por trabajo", value: "$104k", trend: null },
             ].map((item) => (
-              <div key={item.label} className="p-3 bg-background rounded-lg">
-                <p className="text-xs text-text-secondary">{item.label}</p>
-                <p className="text-lg font-bold text-text-primary mt-0.5">
+              <div key={item.label} className="p-3 bg-stone-100 rounded-xl">
+                <p className="text-xs text-stone-500">{item.label}</p>
+                <p className="text-lg font-bold text-ink tnum mt-0.5">
                   {item.value}
                 </p>
                 {item.trend && (
-                  <p className="text-xs text-success font-medium">
+                  <p className="text-xs text-forest-500 font-medium">
                     {item.trend} vs mes anterior
                   </p>
                 )}
