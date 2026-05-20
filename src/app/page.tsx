@@ -15,7 +15,6 @@ import { categories } from "@/data/categories";
 import { workers } from "@/data/users";
 import { copy } from "@/data/copy";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/context";
 
 // ─── Local data ───────────────────────────────────────────────────────────────
 

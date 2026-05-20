@@ -33,8 +33,8 @@ export default function EmployerApplicantsPage() {
   const employerJobs = jobs.filter((j) => j.employerId === employerId && j.status === "open");
   const allOffers = offers.filter((o) => o.employerId === employerId);
 
-  function handleOpenChat(workerId: string, jobId: string) {
-    const chat = createChat(jobId, [workerId, employerId]);
+  async function handleOpenChat(workerId: string, jobId: string) {
+    const chat = await createChat(jobId, [workerId, employerId]);
     router.push(`/mensajes/${chat.id}`);
   }
 

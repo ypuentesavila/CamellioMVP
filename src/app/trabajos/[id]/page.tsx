@@ -104,9 +104,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     cancelled: "danger", draft: "neutral",
   };
 
-  function handleOpenChat(workerId: string) {
+  async function handleOpenChat(workerId: string) {
     if (!user || !job) return;
-    const chat = createChat(job.id, [workerId, job.employerId]);
+    const chat = await createChat(job.id, [workerId, job.employerId]);
     router.push(`/mensajes/${chat.id}`);
   }
 
