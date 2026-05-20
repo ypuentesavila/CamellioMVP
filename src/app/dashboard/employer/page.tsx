@@ -33,119 +33,6 @@ import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
 
 // stats.published is derived from publishedJobs.length inside the component
 
-// publishedJobs is now derived from useJobs() context inside the component (typed as Job[])
-
-const applicants = [
-  {
-    id: "o7",
-    jobId: "j2",
-    jobTitle: "Instalación de tomacorrientes",
-    workerName: "Andrés Felipe Vargas",
-    workerCategory: "Electricista certificado",
-    workerRating: 4.6,
-    workerReviews: 23,
-    proposedPrice: 200000,
-    counterOfferPrice: 170000,
-    status: "negotiating" as const,
-    message:
-      "Soy técnico electricista certificado por el SENA. La instalación incluye materiales y garantía de 6 meses.",
-    createdAt: "2026-05-08T15:00:00Z",
-  },
-  {
-    id: "o5",
-    jobId: "j5",
-    jobTitle: "Puerta corrediza atascada",
-    workerName: "Diego Ríos Parra",
-    workerCategory: "Carpintero",
-    workerRating: 4.7,
-    workerReviews: 15,
-    proposedPrice: 180000,
-    counterOfferPrice: undefined,
-    status: "pending" as const,
-    message:
-      "Puedo revisar el riel y darle diagnóstico sin costo. Si hay que cambiar el riel, lo consigo en ferretería.",
-    createdAt: "2026-05-08T08:00:00Z",
-  },
-  {
-    id: "o6",
-    jobId: "j5",
-    jobTitle: "Puerta corrediza atascada",
-    workerName: "Sebastián Jiménez Ariza",
-    workerCategory: "Cerrajero",
-    workerRating: 4.3,
-    workerReviews: 9,
-    proposedPrice: 150000,
-    counterOfferPrice: undefined,
-    status: "pending" as const,
-    message:
-      "También trabajo con puertas corredizas de madera. Puedo ir mañana.",
-    createdAt: "2026-05-08T14:30:00Z",
-  },
-];
-
-const activeHires = [
-  {
-    id: "hire-1",
-    jobId: "j10",
-    jobTitle: "Reparación tubería rota en baño",
-    workerName: "Carlos Mendoza",
-    workerCategory: "Plomero",
-    workerRating: 4.8,
-    agreedPrice: 110000,
-    chatId: "c4",
-    startedAt: "2026-04-13T08:00:00Z",
-  },
-];
-
-const reviewsGiven = [
-  {
-    id: "r3",
-    workerName: "Carlos Mendoza",
-    jobTitle: "Reparación de tubería rota",
-    rating: 5,
-    comment:
-      "Carlos es el mejor plomero que he contratado. Identificó el problema enseguida y dejó todo limpio.",
-    createdAt: "2026-04-14T18:00:00Z",
-  },
-];
-
-const activityFeed = [
-  {
-    id: "a1",
-    icon: MessageSquare,
-    color: "text-azulejo-500 bg-azulejo-100",
-    text: "Andrés Vargas aceptó negociar precio — $170.000",
-    time: "2026-05-09T11:30:00Z",
-  },
-  {
-    id: "a2",
-    icon: Users,
-    color: "text-stone-500 bg-stone-100",
-    text: "Sebastián Jiménez se postuló a 'Puerta corrediza'",
-    time: "2026-05-08T14:30:00Z",
-  },
-  {
-    id: "a3",
-    icon: Users,
-    color: "text-stone-500 bg-stone-100",
-    text: "Diego Ríos se postuló a 'Puerta corrediza'",
-    time: "2026-05-08T08:00:00Z",
-  },
-  {
-    id: "a4",
-    icon: Plus,
-    color: "text-forest-500 bg-forest-100",
-    text: "Publicaste 'Puerta corrediza de madera atascada'",
-    time: "2026-05-07T11:45:00Z",
-  },
-  {
-    id: "a5",
-    icon: CheckCircle,
-    color: "text-forest-500 bg-forest-100",
-    text: "Trabajo completado — Reparación tubería · Carlos Mendoza",
-    time: "2026-04-14T17:00:00Z",
-  },
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -586,38 +473,27 @@ export default function EmployerDashboardPage() {
       </PageShell>
 
       {/* ── Hiring activity ── */}
-      <PageShell className="mt-7">
-        <SectionHeader title="Actividad reciente" />
-
-        <div className="bg-card rounded-[16px] border border-stone-200 divide-y divide-stone-100">
-          {activityFeed.map((event, index) => {
-            const Icon = event.icon;
-            return (
-              <div
-                key={event.id}
-                className="flex items-start gap-3 p-4 hover:bg-stone-50 transition-colors"
-              >
-                <div
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${event.color}`}
-                >
-                  <Icon className="w-4 h-4" />
+      {myOffers.length > 0 && (
+        <PageShell className="mt-7">
+          <SectionHeader title="Actividad reciente" />
+          <div className="bg-card rounded-[16px] border border-stone-200 divide-y divide-stone-100">
+            {myOffers.slice(0, 5).map((offer, index) => (
+              <div key={offer.id} className="flex items-start gap-3 p-4 hover:bg-stone-50 transition-colors">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-stone-500 bg-stone-100">
+                  <Users className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-ink leading-snug">
-                    {event.text}
+                    {offer.worker?.name ?? "Trabajador"} se postuló — {getJobById(offer.jobId)?.title ?? offer.jobId}
                   </p>
-                  <p className="text-xs text-stone-500 mt-0.5">
-                    {timeAgo(event.time)}
-                  </p>
+                  <p className="text-xs text-stone-500 mt-0.5">{timeAgo(offer.createdAt)}</p>
                 </div>
-                {index === 0 && (
-                  <span className="w-2 h-2 rounded-full bg-azulejo-500 shrink-0 mt-1.5" />
-                )}
+                {index === 0 && <span className="w-2 h-2 rounded-full bg-azulejo-500 shrink-0 mt-1.5" />}
               </div>
-            );
-          })}
-        </div>
-      </PageShell>
+            ))}
+          </div>
+        </PageShell>
+      )}
 
       {/* ── Reviews received (from workers) ── */}
       <PageShell className="mt-7">

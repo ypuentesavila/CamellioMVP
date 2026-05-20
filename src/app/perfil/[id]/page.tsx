@@ -1,13 +1,14 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { WorkerProfileView } from "@/components/features/profile/WorkerProfileView";
 import { EmployerProfileView } from "@/components/features/profile/EmployerProfileView";
-import { getUserById } from "@/data/users";
+import { api } from "@/lib/api";
+import type { User } from "@/types";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -15,13 +16,18 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ params }: ProfilePageProps) {
   const { id } = use(params);
-  const user = getUserById(id);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+
+  useEffect(() => {
+    api.get<User>(`/users/${id}`)
+      .then(setUser)
+      .catch(() => setUser(null));
+  }, [id]);
 
   return (
     <div className="min-h-screen bg-paper pb-24">
       <Navbar />
 
-      {/* Back nav */}
       <div className="bg-paper/95 border-b border-stone-200">
         <div className="max-w-2xl mx-auto px-4 py-2.5">
           <Link
@@ -34,16 +40,15 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         </div>
       </div>
 
-      {!user ? (
+      {user === undefined ? (
+        <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+          <p className="text-sm text-stone-400">Cargando perfil…</p>
+        </div>
+      ) : !user ? (
         <div className="max-w-2xl mx-auto px-4 py-20 text-center">
           <p className="text-lg font-bold text-ink">Perfil no encontrado</p>
-          <p className="text-sm text-stone-400 mt-1">
-            El usuario que buscas no existe.
-          </p>
-          <Link
-            href="/explorar"
-            className="inline-block mt-4 text-sm text-ink font-semibold underline underline-offset-2"
-          >
+          <p className="text-sm text-stone-400 mt-1">El usuario que buscas no existe.</p>
+          <Link href="/explorar" className="inline-block mt-4 text-sm text-ink font-semibold underline underline-offset-2">
             Ver trabajadores
           </Link>
         </div>
