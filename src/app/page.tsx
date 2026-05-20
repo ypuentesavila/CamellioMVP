@@ -100,7 +100,6 @@ function verificationLevel(w: typeof workers[0]) {
 
 export default function LandingPage() {
   const router = useRouter();
-  const { login } = useAuth();
 
   const featured = workers.slice(0, 5);
 
@@ -367,21 +366,18 @@ export default function LandingPage() {
 
           <div className="mt-4 grid grid-cols-2 gap-2">
             {[
-              { label: "Carlos Mendoza", sub: "Trabajador · u1", id: "u1", href: "/dashboard/worker" },
-              { label: "Juan Pablo Restrepo", sub: "Cliente · u8", id: "u8", href: "/dashboard/employer" },
+              { label: "Login", href: "/login" },
+              { label: "Registro", href: "/registro" },
             ].map((u) => (
-              <button
-                key={u.id}
-                type="button"
-                onClick={() => { login(u.id); router.push(u.href); }}
+              <Link
+                key={u.href}
+                href={u.href}
                 className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 bg-card hover:border-ink transition-colors text-left"
               >
-                <Avatar name={u.label} size="sm" />
                 <div className="min-w-0">
                   <p className="text-xs font-bold text-ink truncate">{u.label}</p>
-                  <p className="text-[10px] text-stone-400">{u.sub}</p>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
 
