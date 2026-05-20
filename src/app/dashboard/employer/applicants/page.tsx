@@ -29,7 +29,7 @@ export default function EmployerApplicantsPage() {
   const { jobs, offers, acceptOffer, rejectOffer } = useJobs();
   const { createChat } = useChat();
 
-  const employerId = user?.id ?? "u8";
+  const employerId = user?.id ?? "";
   const employerJobs = jobs.filter((j) => j.employerId === employerId && j.status === "open");
   const allOffers = offers.filter((o) => o.employerId === employerId);
 

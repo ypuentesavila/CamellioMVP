@@ -27,20 +27,9 @@ import { SectionHeader } from "@/components/shared/SectionHeader";
 import { ReviewCard } from "@/components/features/reviews/ReviewCard";
 import { ReviewModal } from "@/components/features/reviews/ReviewModal";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
-import { useJobs } from "@/context";
+import { useJobs, useAuth } from "@/context";
 import { getUserById } from "@/data/users";
 import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
-
-// ─── Static demo data (business logic wired in next phase) ──────────────────
-
-const employer = {
-  id: "u8",
-  name: "Juan Pablo Restrepo",
-  company: "Distribuciones Restrepo",
-  location: "Chapinero, Bogotá",
-  verified: true,
-  jobsPosted: 6,
-};
 
 // stats.published is derived from publishedJobs.length inside the component
 
@@ -200,10 +189,11 @@ function StarRow({ rating }: { rating: number }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function EmployerDashboardPage() {
+  const { user } = useAuth();
   const { jobs, getReviewsByJob, getReviewsByWorker, hasReviewed, offers } = useJobs();
 
   // Real jobs from context typed as Job[] — fixes TS2339 on acceptedOfferId / updatedAt
-  const publishedJobs = jobs.filter((j) => j.employerId === employer.id);
+  const publishedJobs = jobs.filter((j) => j.employerId === (user?.id ?? ""));
 
   // ReviewModal state: { jobId, jobTitle, offerId, targetId, targetName }
   const [reviewTarget, setReviewTarget] = useState<{
@@ -214,7 +204,7 @@ export default function EmployerDashboardPage() {
     targetName: string;
   } | null>(null);
 
-  const EMPLOYER_ID = employer.id;
+  const EMPLOYER_ID = user?.id ?? "";
   const loading = useSimulatedLoading(1400);
 
   // Real reviews given by this employer (across all their completed jobs)
@@ -246,21 +236,21 @@ export default function EmployerDashboardPage() {
             <div>
               <p className="text-sm text-stone-500">Buenos días</p>
               <h1 className="text-xl font-bold text-ink mt-0.5">
-                {employer.name}
+                {user?.name ?? ""}
               </h1>
               <div className="flex items-center gap-1.5 mt-1">
                 <Building2 className="w-3.5 h-3.5 text-stone-500" />
                 <span className="text-sm text-stone-500">
-                  {employer.company}
+                  {(user as any)?.employerProfile?.companyName ?? ""}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <MapPin className="w-3.5 h-3.5 text-stone-500" />
                 <span className="text-sm text-stone-500">
-                  {employer.location}
+                  {user?.location ?? ""}
                 </span>
               </div>
-              {employer.verified && (
+              {true && (
                 <div className="mt-2">
                   <Badge variant="default" size="sm">
                     <CheckCircle className="w-3 h-3" />
@@ -269,7 +259,7 @@ export default function EmployerDashboardPage() {
                 </div>
               )}
             </div>
-            <Avatar name={employer.name} size="xl" className="shrink-0" />
+            <Avatar name={user?.name ?? ""} size="xl" className="shrink-0" />
           </div>
         </PageShell>
       </div>
@@ -546,7 +536,7 @@ export default function EmployerDashboardPage() {
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-stone-200 flex items-center gap-2">
-                  <Link href={`/trabajos/${hire.jobId ?? "j10"}`}>
+                  <Link href={`/trabajos/${hire.jobId ?? ""}`}>
                     <Button variant="soft" size="sm">
                       Ver detalles
                     </Button>
@@ -681,7 +671,7 @@ export default function EmployerDashboardPage() {
                 rating={review.rating}
                 comment={review.comment}
                 createdAt={review.createdAt}
-                authorName={employer.name}
+                authorName={user?.name ?? ""}
                 jobTitle={job?.title}
               />
             );

@@ -25,7 +25,7 @@ export function ChatWindow({ chat }: ChatWindowProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const userId = user?.id ?? "u1";
+  const userId = user?.id ?? "";
   const messages = getMessagesByChat(chat.id);
   const otherId = chat.participantIds.find((id) => id !== userId);
   const other = otherId ? getUserById(otherId) : undefined;

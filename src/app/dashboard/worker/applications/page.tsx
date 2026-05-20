@@ -26,7 +26,7 @@ export default function WorkerApplicationsPage() {
   const { user } = useAuth();
   const { jobs, offers, withdrawOffer } = useJobs();
 
-  const workerId = user?.id ?? "u1";
+  const workerId = user?.id ?? "";
   const myOffers = offers
     .filter((o) => o.workerId === workerId)
     .sort((a, b) => STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status));

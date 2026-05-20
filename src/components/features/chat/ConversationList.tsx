@@ -23,8 +23,7 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
   const { getJobById } = useJobs();
   const loading = useSimulatedLoading(900);
 
-  // Fall back to demo user u1 so the UI is usable without auth
-  const userId = user?.id ?? "u1";
+  const userId = user?.id ?? "";
   const chats = getChatsByUser(userId);
 
   return (
