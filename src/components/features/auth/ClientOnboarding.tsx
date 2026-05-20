@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Phone } from "lucide-react";
+import { User, Phone, Mail, Lock } from "lucide-react";
 import { AuthLayout } from "./AuthLayout";
 import { Input } from "@/components/ui/Input";
 import { Chip, ChipGroup } from "@/components/ui/Chip";
@@ -20,10 +20,12 @@ const ZONES = [
 
 export function ClientOnboarding() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { registerEmployer } = useAuth();
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [phone, setPhone] = useState(user?.phone ?? "");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const [zone, setZone] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -31,6 +33,10 @@ export function ClientOnboarding() {
   function validate() {
     const e: Record<string, string> = {};
     if (!name.trim()) e.name = copy.errors.required;
+    if (!email.trim()) e.email = copy.errors.required;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = copy.errors.invalidEmail;
+    if (!password.trim()) e.password = copy.errors.required;
+    else if (password.length < 6) e.password = "Mínimo 6 caracteres.";
     if (!phone.trim()) e.phone = copy.errors.required;
     else if (!/^[+\d\s\-()]{7,}$/.test(phone.trim())) e.phone = copy.errors.invalidPhone;
     if (!zone) e.zone = "Selecciona tu zona.";
@@ -41,8 +47,20 @@ export function ClientOnboarding() {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 700));
-    router.push("/bienvenido");
+    try {
+      await registerEmployer({
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+        phone: phone.trim(),
+        location: `${zone}, Bogotá`,
+      });
+      router.push("/bienvenido");
+    } catch (err: unknown) {
+      setErrors({ email: err instanceof Error ? err.message : "Error al registrar." });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -74,6 +92,32 @@ export function ClientOnboarding() {
           leadingIcon={User}
           placeholder="Tu nombre completo"
           error={errors.name}
+          required
+        />
+
+        <Input
+          label="Correo electrónico"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: "" })); }}
+          leadingIcon={Mail}
+          placeholder="tu@correo.com"
+          error={errors.email}
+          required
+        />
+
+        <Input
+          label="Contraseña"
+          type="password"
+          autoComplete="new-password"
+          value={password}
+          onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: "" })); }}
+          leadingIcon={Lock}
+          placeholder="Mínimo 6 caracteres"
+          error={errors.password}
           required
         />
 

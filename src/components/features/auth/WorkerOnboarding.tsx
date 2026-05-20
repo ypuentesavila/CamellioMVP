@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Phone, Mail, CreditCard, CheckCircle2, Circle, Camera } from "lucide-react";
+import { User, Phone, Mail, CreditCard, Lock, CheckCircle2, Circle, Camera } from "lucide-react";
 import { AuthLayout } from "./AuthLayout";
 import { Input } from "@/components/ui/Input";
 import { Chip, ChipGroup } from "@/components/ui/Chip";
@@ -10,6 +10,7 @@ import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { categories } from "@/data/categories";
 import { copy } from "@/data/copy";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context";
 
 const ZONES = [
   "Usaquén", "Chapinero", "Santa Fe", "San Cristóbal",
@@ -29,6 +30,7 @@ interface Step1Data {
   cedula: string;
   phone: string;
   email: string;
+  password: string;
 }
 
 interface Step2Data {
@@ -44,10 +46,11 @@ interface Step3Data {
 
 export function WorkerOnboarding() {
   const router = useRouter();
+  const { registerWorker } = useAuth();
   const [step, setStep] = useState(1);
 
   // Step 1
-  const [s1, setS1] = useState<Step1Data>({ name: "", cedula: "", phone: "", email: "" });
+  const [s1, setS1] = useState<Step1Data>({ name: "", cedula: "", phone: "", email: "", password: "" });
   const [e1, setE1] = useState<Partial<Step1Data>>({});
 
   // Step 2
@@ -70,6 +73,8 @@ export function WorkerOnboarding() {
     else if (!/^[+\d\s\-()]{7,}$/.test(s1.phone.trim())) e.phone = copy.errors.invalidPhone;
     if (!s1.email.trim()) e.email = copy.errors.required;
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s1.email.trim())) e.email = copy.errors.invalidEmail;
+    if (!s1.password.trim()) e.password = copy.errors.required;
+    else if (s1.password.length < 6) e.password = "Mínimo 6 caracteres.";
     return e;
   }
 
@@ -111,8 +116,27 @@ export function WorkerOnboarding() {
 
   async function handleFinish() {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    router.push("/bienvenido");
+    try {
+      const primaryCategory = categories.find((c) => c.id === s2.categoryIds[0]);
+      await registerWorker({
+        name: s1.name.trim(),
+        email: s1.email.trim().toLowerCase(),
+        password: s1.password,
+        phone: s1.phone.trim(),
+        location: `${s2.zone}, Bogotá`,
+        category: primaryCategory?.slug ?? s2.categoryIds[0],
+        skills: s2.categoryIds.map(
+          (id) => categories.find((c) => c.id === id)?.name ?? id
+        ),
+        hourlyRate: s3.rate,
+      });
+      router.push("/bienvenido");
+    } catch (err: unknown) {
+      setE1({ email: err instanceof Error ? err.message : "Error al registrar." });
+      setStep(1);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function toggleDay(idx: number) {
@@ -205,6 +229,18 @@ export function WorkerOnboarding() {
               leadingIcon={Mail}
               placeholder="tu@correo.com"
               error={e1.email}
+              required
+            />
+
+            <Input
+              label="Contraseña"
+              type="password"
+              autoComplete="new-password"
+              value={s1.password}
+              onChange={(e) => { setS1((p) => ({ ...p, password: e.target.value })); setE1((p) => ({ ...p, password: "" })); }}
+              leadingIcon={Lock}
+              placeholder="Mínimo 6 caracteres"
+              error={e1.password}
               required
             />
 

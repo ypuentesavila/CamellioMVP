@@ -108,21 +108,23 @@ export default function PublicarPage() {
   async function handlePublish() {
     if (!user) return;
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 900));
-
-    const newJob = createJob({
-      employerId: user.id,
-      title: title.trim(),
-      description: description.trim() || `Solicitud de ${CATEGORY_NAMES[category] ?? category} en ${zone}`,
-      category,
-      location: `${zone}, Bogotá`,
-      budget: { min: Number(budgetMin), max: Number(budgetMax) },
-      urgency,
-    });
-
-    setCreatedJobId(newJob.id);
-    setSubmitting(false);
-    setSuccess(true);
+    try {
+      const newJob = await createJob({
+        employerId: user.id,
+        title: title.trim(),
+        description: description.trim() || `Solicitud de ${CATEGORY_NAMES[category] ?? category} en ${zone}`,
+        category,
+        location: `${zone}, Bogotá`,
+        budget: { min: Number(budgetMin), max: Number(budgetMax) },
+        urgency,
+      });
+      setCreatedJobId(newJob.id);
+      setSuccess(true);
+    } catch (err: unknown) {
+      setErrors({ title: err instanceof Error ? err.message : "Error al publicar." });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   // ── Success screen ──────────────────────────────────────────────────────────

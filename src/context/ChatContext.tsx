@@ -8,21 +8,7 @@ import {
   useCallback,
 } from "react";
 import type { Chat, Message, MessageType } from "@/types";
-import { chats as mockChats } from "@/data/chats";
-import { messages as mockMessages } from "@/data/messages";
-
-const CHATS_KEY = "camellio_chats";
-const MESSAGES_KEY = "camellio_messages";
-
-function loadFromStorage<T>(key: string, fallback: T[]): T[] {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : fallback;
-  } catch {
-    return fallback;
-  }
-}
+import { api, getToken } from "@/lib/api";
 
 interface ChatContextValue {
   chats: Chat[];
@@ -35,34 +21,26 @@ interface ChatContextValue {
     jobId: string,
     participantIds: [string, string],
     offerId?: string
-  ) => Chat;
+  ) => Promise<Chat>;
   sendMessage: (
     chatId: string,
     senderId: string,
     content: string,
     type?: MessageType
-  ) => void;
-  markChatRead: (chatId: string, userId: string) => void;
+  ) => Promise<void>;
+  markChatRead: (chatId: string, userId: string) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextValue | null>(null);
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-  const [chats, setChats] = useState<Chat[]>(mockChats);
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    setChats(loadFromStorage(CHATS_KEY, mockChats));
-    setMessages(loadFromStorage(MESSAGES_KEY, mockMessages));
+    if (!getToken()) return;
+    api.get<Chat[]>('/chats').then(setChats).catch(() => {});
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(CHATS_KEY, JSON.stringify(chats));
-  }, [chats]);
-
-  useEffect(() => {
-    localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
-  }, [messages]);
 
   const getChatById = useCallback(
     (chatId: string) => chats.find((c) => c.id === chatId),
@@ -82,13 +60,21 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   );
 
   const getMessagesByChat = useCallback(
-    (chatId: string) =>
-      messages
-        .filter((m) => m.chatId === chatId)
-        .sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        ),
+    (chatId: string) => {
+      const cached = messages.filter((m) => m.chatId === chatId);
+      if (cached.length > 0) return cached.sort(
+        (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+      api.get<Message[]>(`/messages?chatId=${chatId}`)
+        .then((fetched) => {
+          setMessages((prev) => {
+            const withoutThis = prev.filter((m) => m.chatId !== chatId);
+            return [...withoutThis, ...fetched];
+          });
+        })
+        .catch(() => {});
+      return [];
+    },
     [messages]
   );
 
@@ -101,11 +87,11 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   );
 
   const createChat = useCallback(
-    (
+    async (
       jobId: string,
       participantIds: [string, string],
       offerId?: string
-    ): Chat => {
+    ): Promise<Chat> => {
       const existing = chats.find(
         (c) =>
           c.jobId === jobId &&
@@ -113,44 +99,22 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
           c.participantIds.includes(participantIds[1])
       );
       if (existing) return existing;
-
-      const newChat: Chat = {
-        id: `c-${Date.now()}`,
-        jobId,
-        offerId,
-        participantIds,
-        unreadCount: {
-          [participantIds[0]]: 0,
-          [participantIds[1]]: 0,
-        },
-        createdAt: new Date().toISOString(),
-      };
-      setChats((prev) => [newChat, ...prev]);
-      return newChat;
+      const chat = await api.post<Chat>('/chats', { jobId, participantIds, offerId });
+      setChats((prev) => [chat, ...prev]);
+      return chat;
     },
     [chats]
   );
 
   const sendMessage = useCallback(
-    (
+    async (
       chatId: string,
       senderId: string,
       content: string,
-      type: MessageType = "text"
+      type: MessageType = 'text'
     ) => {
-      const now = new Date().toISOString();
-      const newMessage: Message = {
-        id: `m-${Date.now()}`,
-        chatId,
-        senderId,
-        content,
-        type,
-        readBy: [senderId],
-        createdAt: now,
-      };
-
-      setMessages((prev) => [...prev, newMessage]);
-
+      const msg = await api.post<Message>('/messages', { chatId, content, type });
+      setMessages((prev) => [...prev, msg]);
       setChats((prev) =>
         prev.map((c) => {
           if (c.id !== chatId) return c;
@@ -158,7 +122,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
           return {
             ...c,
             lastMessage: content,
-            lastMessageAt: now,
+            lastMessageAt: msg.createdAt,
             unreadCount: {
               ...c.unreadCount,
               [other]: (c.unreadCount[other] ?? 0) + 1,
@@ -170,7 +134,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const markChatRead = useCallback((chatId: string, userId: string) => {
+  const markChatRead = useCallback(async (chatId: string, userId: string) => {
+    await api.patch(`/chats/${chatId}/read`, {});
     setChats((prev) =>
       prev.map((c) =>
         c.id === chatId
@@ -208,6 +173,6 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
 
 export function useChat() {
   const ctx = useContext(ChatContext);
-  if (!ctx) throw new Error("useChat must be used within ChatProvider");
+  if (!ctx) throw new Error('useChat must be used within ChatProvider');
   return ctx;
 }

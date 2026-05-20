@@ -8,23 +8,7 @@ import {
   useCallback,
 } from "react";
 import type { Job, JobStatus, Offer, OfferStatus, Review } from "@/types";
-import { jobs as mockJobs } from "@/data/jobs";
-import { offers as mockOffers } from "@/data/offers";
-import { reviews as mockReviews } from "@/data/reviews";
-
-const JOBS_KEY = "camellio_jobs";
-const OFFERS_KEY = "camellio_offers";
-const REVIEWS_KEY = "camellio_reviews";
-
-function loadFromStorage<T>(key: string, fallback: T[]): T[] {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : fallback;
-  } catch {
-    return fallback;
-  }
-}
+import { api, getToken } from "@/lib/api";
 
 interface CreateJobData {
   employerId: string;
@@ -66,41 +50,31 @@ interface JobContextValue {
   getReviewsByJob: (jobId: string) => Review[];
   getWorkerRating: (workerId: string) => { average: number; count: number };
   hasReviewed: (jobId: string, authorId: string) => boolean;
-  createJob: (data: CreateJobData) => Job;
-  updateJobStatus: (jobId: string, status: JobStatus) => void;
-  completeJob: (jobId: string) => void;
-  submitOffer: (data: SubmitOfferData) => Offer;
-  acceptOffer: (offerId: string) => void;
-  rejectOffer: (offerId: string) => void;
-  withdrawOffer: (offerId: string) => void;
-  counterOffer: (offerId: string, price: number, note: string) => void;
-  submitReview: (data: SubmitReviewData) => Review;
+  createJob: (data: CreateJobData) => Promise<Job>;
+  updateJobStatus: (jobId: string, status: JobStatus) => Promise<void>;
+  completeJob: (jobId: string) => Promise<void>;
+  submitOffer: (data: SubmitOfferData) => Promise<void>;
+  acceptOffer: (offerId: string) => Promise<void>;
+  rejectOffer: (offerId: string) => Promise<void>;
+  withdrawOffer: (offerId: string) => Promise<void>;
+  counterOffer: (offerId: string, price: number, note: string) => Promise<void>;
+  submitReview: (data: SubmitReviewData) => Promise<Review>;
 }
 
 const JobContext = createContext<JobContextValue | null>(null);
 
 export function JobProvider({ children }: { children: React.ReactNode }) {
-  const [jobs, setJobs] = useState<Job[]>(mockJobs);
-  const [offers, setOffers] = useState<Offer[]>(mockOffers);
-  const [reviews, setReviews] = useState<Review[]>(mockReviews);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
-    setJobs(loadFromStorage(JOBS_KEY, mockJobs));
-    setOffers(loadFromStorage(OFFERS_KEY, mockOffers));
-    setReviews(loadFromStorage(REVIEWS_KEY, mockReviews));
+    api.get<Job[]>('/jobs').then(setJobs).catch(() => {});
+    if (getToken()) {
+      api.get<Offer[]>('/offers').then(setOffers).catch(() => {});
+      api.get<Review[]>('/reviews').then(setReviews).catch(() => {});
+    }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
-  }, [jobs]);
-
-  useEffect(() => {
-    localStorage.setItem(OFFERS_KEY, JSON.stringify(offers));
-  }, [offers]);
-
-  useEffect(() => {
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-  }, [reviews]);
 
   // ─── Queries ────────────────────────────────────────────────────────────────
 
@@ -155,159 +129,86 @@ export function JobProvider({ children }: { children: React.ReactNode }) {
 
   // ─── Job mutations ──────────────────────────────────────────────────────────
 
-  const createJob = useCallback((data: CreateJobData): Job => {
-    const now = new Date().toISOString();
-    const newJob: Job = {
-      ...data,
-      id: `j-${Date.now()}`,
-      status: "open",
-      offerCount: 0,
-      images: data.images ?? [],
-      createdAt: now,
-      updatedAt: now,
-    };
-    setJobs((prev) => [newJob, ...prev]);
-    return newJob;
+  const createJob = useCallback(async (data: CreateJobData): Promise<Job> => {
+    const job = await api.post<Job>('/jobs', data);
+    setJobs((prev) => [job, ...prev]);
+    return job;
   }, []);
 
-  const updateJobStatus = useCallback((jobId: string, status: JobStatus) => {
-    setJobs((prev) =>
-      prev.map((j) =>
-        j.id === jobId
-          ? { ...j, status, updatedAt: new Date().toISOString() }
-          : j
-      )
-    );
+  const updateJobStatus = useCallback(async (jobId: string, status: JobStatus) => {
+    const job = await api.patch<Job>(`/jobs/${jobId}/status`, { status });
+    setJobs((prev) => prev.map((j) => (j.id === jobId ? job : j)));
   }, []);
 
-  const completeJob = useCallback((jobId: string) => {
-    setJobs((prev) =>
-      prev.map((j) =>
-        j.id === jobId
-          ? { ...j, status: "completed", updatedAt: new Date().toISOString() }
-          : j
-      )
-    );
-  }, []);
+  const completeJob = useCallback(async (jobId: string) => {
+    await updateJobStatus(jobId, 'completed');
+  }, [updateJobStatus]);
 
   // ─── Offer mutations ─────────────────────────────────────────────────────────
 
-  const submitOffer = useCallback((data: SubmitOfferData): Offer => {
-    const now = new Date().toISOString();
-    const newOffer: Offer = {
-      ...data,
-      id: `o-${Date.now()}`,
-      status: "pending",
-      negotiationRound: 0,
-      createdAt: now,
-      updatedAt: now,
-    };
-    setOffers((prev) => [newOffer, ...prev]);
+  const submitOffer = useCallback(async (data: SubmitOfferData): Promise<void> => {
+    const offer = await api.post<Offer>('/offers', data);
+    setOffers((prev) => [offer, ...prev]);
     setJobs((prev) =>
       prev.map((j) =>
         j.id === data.jobId
-          ? { ...j, offerCount: j.offerCount + 1, updatedAt: now }
+          ? { ...j, offerCount: j.offerCount + 1, updatedAt: offer.updatedAt }
           : j
       )
     );
-    return newOffer;
   }, []);
 
-  const updateOfferStatus = useCallback(
-    (offerId: string, status: OfferStatus) => {
-      setOffers((prev) =>
-        prev.map((o) =>
-          o.id === offerId
-            ? { ...o, status, updatedAt: new Date().toISOString() }
-            : o
-        )
-      );
-    },
-    []
-  );
+  const acceptOffer = useCallback(async (offerId: string) => {
+    const offer = await api.post<Offer>(`/offers/${offerId}/accept`, {});
+    const jobId = offers.find((o) => o.id === offerId)?.jobId ?? offer.jobId;
+    setOffers((prev) =>
+      prev.map((o) => {
+        if (o.id === offerId) return offer;
+        if (o.jobId === jobId && o.id !== offerId)
+          return { ...o, status: 'rejected' as OfferStatus };
+        return o;
+      })
+    );
+    setJobs((prev) =>
+      prev.map((j) =>
+        j.id === jobId
+          ? { ...j, status: 'in_progress' as JobStatus, acceptedOfferId: offerId }
+          : j
+      )
+    );
+  }, [offers]);
 
-  const acceptOffer = useCallback(
-    (offerId: string) => {
-      const offer = offers.find((o) => o.id === offerId);
-      if (!offer) return;
-      const now = new Date().toISOString();
-      setOffers((prev) =>
-        prev.map((o) => {
-          if (o.jobId !== offer.jobId) return o;
-          return {
-            ...o,
-            status: o.id === offerId ? "accepted" : "rejected",
-            updatedAt: now,
-          };
-        })
-      );
-      setJobs((prev) =>
-        prev.map((j) =>
-          j.id === offer.jobId
-            ? { ...j, status: "in_progress", acceptedOfferId: offerId, updatedAt: now }
-            : j
-        )
-      );
-    },
-    [offers]
-  );
+  const rejectOffer = useCallback(async (offerId: string) => {
+    const offer = await api.post<Offer>(`/offers/${offerId}/reject`, {});
+    setOffers((prev) => prev.map((o) => (o.id === offerId ? offer : o)));
+  }, []);
 
-  const rejectOffer = useCallback(
-    (offerId: string) => updateOfferStatus(offerId, "rejected"),
-    [updateOfferStatus]
-  );
-
-  const withdrawOffer = useCallback(
-    (offerId: string) => {
-      updateOfferStatus(offerId, "withdrawn");
-      const offer = offers.find((o) => o.id === offerId);
-      if (offer) {
-        setJobs((prev) =>
-          prev.map((j) =>
-            j.id === offer.jobId
-              ? {
-                  ...j,
-                  offerCount: Math.max(0, j.offerCount - 1),
-                  updatedAt: new Date().toISOString(),
-                }
-              : j
-          )
-        );
-      }
-    },
-    [offers, updateOfferStatus]
-  );
+  const withdrawOffer = useCallback(async (offerId: string) => {
+    const offer = await api.post<Offer>(`/offers/${offerId}/withdraw`, {});
+    setOffers((prev) => prev.map((o) => (o.id === offerId ? offer : o)));
+    setJobs((prev) =>
+      prev.map((j) =>
+        j.id === offer.jobId
+          ? { ...j, offerCount: Math.max(0, j.offerCount - 1) }
+          : j
+      )
+    );
+  }, []);
 
   const counterOffer = useCallback(
-    (offerId: string, price: number, note: string) => {
-      setOffers((prev) =>
-        prev.map((o) =>
-          o.id === offerId
-            ? {
-                ...o,
-                status: "negotiating",
-                counterOfferPrice: price,
-                counterOfferNote: note,
-                negotiationRound: o.negotiationRound + 1,
-                updatedAt: new Date().toISOString(),
-              }
-            : o
-        )
-      );
+    async (offerId: string, price: number, note: string) => {
+      const offer = await api.post<Offer>(`/offers/${offerId}/counter`, { price, note });
+      setOffers((prev) => prev.map((o) => (o.id === offerId ? offer : o)));
     },
     []
   );
 
   // ─── Review mutations ────────────────────────────────────────────────────────
 
-  const submitReview = useCallback((data: SubmitReviewData): Review => {
-    const newReview: Review = {
-      ...data,
-      id: `r-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-    };
-    setReviews((prev) => [newReview, ...prev]);
-    return newReview;
+  const submitReview = useCallback(async (data: SubmitReviewData): Promise<Review> => {
+    const review = await api.post<Review>('/reviews', data);
+    setReviews((prev) => [review, ...prev]);
+    return review;
   }, []);
 
   return (
@@ -341,6 +242,6 @@ export function JobProvider({ children }: { children: React.ReactNode }) {
 
 export function useJobs() {
   const ctx = useContext(JobContext);
-  if (!ctx) throw new Error("useJobs must be used within JobProvider");
+  if (!ctx) throw new Error('useJobs must be used within JobProvider');
   return ctx;
 }
