@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ApplyModal } from "@/components/features/jobs/ApplyModal";
 import { useAuth, useJobs, useChat } from "@/context";
-import { getUserById } from "@/data/users";
+import { useUser } from "@/hooks/useUser";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +70,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [applyOpen, setApplyOpen] = useState(false);
 
   const job = jobs.find((j) => j.id === id);
-  const employer = job ? getUserById(job.employerId) : undefined;
+  const employer = useUser(job?.employerId);
   const jobOffers = job ? offers.filter((o) => o.jobId === job.id) : [];
   const myOffer = user && isWorker ? jobOffers.find((o) => o.workerId === user.id) : undefined;
 
@@ -256,7 +256,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               ) : (
                 <div className="flex flex-col gap-3">
                   {jobOffers.map((offer) => {
-                    const worker = getUserById(offer.workerId);
+                    const worker = offer.worker ?? null;
                     if (!worker) return null;
                     const s = offerStatusConfig[offer.status];
                     const SIcon = s.icon;

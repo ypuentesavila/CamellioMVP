@@ -19,8 +19,8 @@ import { Button } from "@/components/ui/Button";
 import { JobCard } from "@/components/features/jobs/JobCard";
 import { ApplyModal } from "@/components/features/jobs/ApplyModal";
 import { categories } from "@/data/categories";
-import { workers } from "@/data/users";
 import { formatCOPShort } from "@/lib/format";
+import { api } from "@/lib/api";
 import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
 import { useAuth, useJobs } from "@/context";
 import { cn } from "@/lib/utils";
@@ -320,6 +320,11 @@ function ExplorarContent() {
 
   const [query, setQuery]               = useState("");
   const [activeCategory, setCategory]   = useState<string | null>(searchParams.get("categoria"));
+  const [allWorkers, setAllWorkers]     = useState<User[]>([]);
+
+  useEffect(() => {
+    api.get<User[]>('/workers').then(setAllWorkers).catch(() => {});
+  }, []);
 
   // Workers view
   const [sort, setSort]                 = useState<SortId>("relevancia");
@@ -339,7 +344,7 @@ function ExplorarContent() {
   }, [searchParams]);
 
   const filteredWorkers = useMemo(() => {
-    const workerUsers = workers.filter((w) => w.role === "worker" && w.workerProfile);
+    const workerUsers = allWorkers.filter((w) => w.role === "worker" && w.workerProfile);
     let list = workerUsers.filter((w) => {
       const p = w.workerProfile!;
       if (activeCategory && p.category !== activeCategory) return false;
@@ -371,7 +376,7 @@ function ExplorarContent() {
       trabajos:  (a, b) => b.workerProfile!.completedJobs - a.workerProfile!.completedJobs,
     };
     return [...list].sort(sorters[sort]);
-  }, [query, activeCategory, avail, verifMin, sort]);
+  }, [allWorkers, query, activeCategory, avail, verifMin, sort]);
 
   const filteredJobs = useMemo(() => {
     return jobs

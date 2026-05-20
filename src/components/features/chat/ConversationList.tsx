@@ -8,10 +8,85 @@ import { SkeletonChatItem } from "@/components/ui/Skeleton";
 import { useAuth } from "@/context";
 import { useChat } from "@/context";
 import { useJobs } from "@/context";
-import { getUserById } from "@/data/users";
+import { useUser } from "@/hooks/useUser";
 import { timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
+
+function ChatListItem({ chat, activeChatId, userId, getJobById }: {
+  chat: { id: string; participantIds: string[]; unreadCount: Record<string, number>; lastMessage?: string; lastMessageAt?: string; jobId: string };
+  activeChatId?: string;
+  userId: string;
+  getJobById: (id: string) => { title: string } | undefined;
+}) {
+  const otherId = chat.participantIds.find((id) => id !== userId);
+  const other = useUser(otherId);
+  const unread = chat.unreadCount[userId] ?? 0;
+  const job = getJobById(chat.jobId);
+  const isActive = chat.id === activeChatId;
+
+  return (
+    <Link
+      href={`/mensajes/${chat.id}`}
+      className={cn(
+        "flex items-start gap-3 px-4 py-3.5 border-b border-stone-100 transition-colors",
+        isActive
+          ? "bg-azulejo-100 border-l-2 border-l-azulejo-500"
+          : "hover:bg-stone-50"
+      )}
+    >
+      {/* Avatar + unread badge */}
+      <div className="relative shrink-0">
+        <Avatar name={other?.name ?? "?"} size="md" />
+        {unread > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-ink text-paper text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
+            {unread > 9 ? "9+" : unread}
+          </span>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-1">
+          <p
+            className={cn(
+              "text-sm truncate",
+              unread > 0
+                ? "font-bold text-ink"
+                : "font-semibold text-ink"
+            )}
+          >
+            {other?.name ?? "Usuario"}
+          </p>
+          {chat.lastMessageAt && (
+            <p className="text-xs text-stone-400 shrink-0">
+              {timeAgo(chat.lastMessageAt)}
+            </p>
+          )}
+        </div>
+
+        {/* Job tag */}
+        {job && (
+          <p className="text-xs text-azulejo-500 font-medium truncate mt-0.5">
+            {job.title}
+          </p>
+        )}
+
+        {/* Last message preview */}
+        <p
+          className={cn(
+            "text-xs truncate mt-0.5",
+            unread > 0
+              ? "text-ink font-medium"
+              : "text-stone-500"
+          )}
+        >
+          {chat.lastMessage ?? "Inicia una conversación"}
+        </p>
+      </div>
+    </Link>
+  );
+}
 
 interface ConversationListProps {
   activeChatId?: string;
@@ -57,76 +132,9 @@ export function ConversationList({ activeChatId }: ConversationListProps) {
           </div>
         ) : (
           <div className="animate-fade-in">
-          {chats.map((chat) => {
-            const otherId = chat.participantIds.find((id) => id !== userId);
-            const other = otherId ? getUserById(otherId) : undefined;
-            const unread = chat.unreadCount[userId] ?? 0;
-            const job = getJobById(chat.jobId);
-            const isActive = chat.id === activeChatId;
-
-            return (
-              <Link
-                key={chat.id}
-                href={`/mensajes/${chat.id}`}
-                className={cn(
-                  "flex items-start gap-3 px-4 py-3.5 border-b border-stone-100 transition-colors",
-                  isActive
-                    ? "bg-azulejo-100 border-l-2 border-l-azulejo-500"
-                    : "hover:bg-stone-50"
-                )}
-              >
-                {/* Avatar + unread badge */}
-                <div className="relative shrink-0">
-                  <Avatar name={other?.name ?? "?"} size="md" />
-                  {unread > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-ink text-paper text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
-                      {unread > 9 ? "9+" : unread}
-                    </span>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-1">
-                    <p
-                      className={cn(
-                        "text-sm truncate",
-                        unread > 0
-                          ? "font-bold text-ink"
-                          : "font-semibold text-ink"
-                      )}
-                    >
-                      {other?.name ?? "Usuario"}
-                    </p>
-                    {chat.lastMessageAt && (
-                      <p className="text-xs text-stone-400 shrink-0">
-                        {timeAgo(chat.lastMessageAt)}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Job tag */}
-                  {job && (
-                    <p className="text-xs text-azulejo-500 font-medium truncate mt-0.5">
-                      {job.title}
-                    </p>
-                  )}
-
-                  {/* Last message preview */}
-                  <p
-                    className={cn(
-                      "text-xs truncate mt-0.5",
-                      unread > 0
-                        ? "text-ink font-medium"
-                        : "text-stone-500"
-                    )}
-                  >
-                    {chat.lastMessage ?? "Inicia una conversación"}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+          {chats.map((chat) => (
+            <ChatListItem key={chat.id} chat={chat} activeChatId={activeChatId} userId={userId} getJobById={getJobById} />
+          ))}
           </div>
         )}
       </div>

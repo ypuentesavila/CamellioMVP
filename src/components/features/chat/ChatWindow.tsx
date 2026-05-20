@@ -9,7 +9,7 @@ import { MessageBubble } from "./MessageBubble";
 import { useAuth } from "@/context";
 import { useChat } from "@/context";
 import { useJobs } from "@/context";
-import { getUserById } from "@/data/users";
+import { useUser } from "@/hooks/useUser";
 import type { Chat } from "@/types";
 
 interface ChatWindowProps {
@@ -28,7 +28,7 @@ export function ChatWindow({ chat }: ChatWindowProps) {
   const userId = user?.id ?? "";
   const messages = getMessagesByChat(chat.id);
   const otherId = chat.participantIds.find((id) => id !== userId);
-  const other = otherId ? getUserById(otherId) : undefined;
+  const other = useUser(otherId);
   const job = getJobById(chat.jobId);
 
   // Mark read on open and when new messages arrive

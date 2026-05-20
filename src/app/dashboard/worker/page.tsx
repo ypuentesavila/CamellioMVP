@@ -30,7 +30,6 @@ import { ApplyModal } from "@/components/features/jobs/ApplyModal";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
 import { useAuth } from "@/context";
 import { useJobs } from "@/context";
-import { getUserById } from "@/data/users";
 import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
 import type { Job } from "@/types";
 
@@ -44,18 +43,6 @@ const WORKER_DEMO = {
   completedJobs: 52,
   available: true,
 };
-
-const activeJobs = [
-  {
-    jobId: "j10",
-    id: "j10-active",
-    title: "Reparación de tubería rota en baño",
-    employer: "Juan Pablo Restrepo",
-    location: "Chapinero",
-    agreedPrice: 110000,
-    chatId: "c4",
-  },
-];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -172,7 +159,7 @@ export default function WorkerDashboardPage() {
           <StatCard
             icon={DollarSign}
             label="Este mes"
-            value={formatCOPShort(340000)}
+            value="—"
             sub="+12%"
             variant="primary"
           />
@@ -388,14 +375,13 @@ export default function WorkerDashboardPage() {
 
           {/* Recent review cards */}
           {workerReviews.slice(0, 3).map((review) => {
-            const author = getUserById(review.authorId);
             return (
               <ReviewCard
                 key={review.id}
                 rating={review.rating}
                 comment={review.comment}
                 createdAt={review.createdAt}
-                authorName={author?.name ?? "Empleador"}
+                authorName="Empleador"
                 authorRole="employer"
                 jobTitle={jobs.find((j) => j.id === review.jobId)?.title}
               />

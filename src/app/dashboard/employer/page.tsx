@@ -28,7 +28,6 @@ import { ReviewCard } from "@/components/features/reviews/ReviewCard";
 import { ReviewModal } from "@/components/features/reviews/ReviewModal";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
 import { useJobs, useAuth } from "@/context";
-import { getUserById } from "@/data/users";
 import { useSimulatedLoading } from "@/hooks/useSimulatedLoading";
 
 // stats.published is derived from publishedJobs.length inside the component
@@ -537,7 +536,6 @@ export default function EmployerDashboardPage() {
                 </div>
               </div>
               {receivedReviews.map((review) => {
-                const author = getUserById(review.authorId);
                 const job = publishedJobs.find((j) => j.id === review.jobId);
                 return (
                   <ReviewCard
@@ -545,7 +543,7 @@ export default function EmployerDashboardPage() {
                     rating={review.rating}
                     comment={review.comment}
                     createdAt={review.createdAt}
-                    authorName={author?.name ?? "Trabajador"}
+                    authorName="Trabajador"
                     authorRole="worker"
                     jobTitle={job?.title}
                   />
@@ -561,12 +559,11 @@ export default function EmployerDashboardPage() {
         <SectionHeader
           title="Reseñas que dejé"
           count={realReviews.length}
-          action={{ label: "Ver todas", href: "/perfil/u8" }}
+          action={{ label: "Ver todas", href: `/perfil/${user?.id ?? ""}` }}
         />
 
         <div className="flex flex-col gap-3">
           {realReviews.map((review) => {
-            const target = getUserById(review.targetId);
             const job = publishedJobs.find((j) => j.id === review.jobId);
             return (
               <ReviewCard
@@ -590,9 +587,7 @@ export default function EmployerDashboardPage() {
               const acceptedOffer = offers.find(
                 (o) => o.id === j.acceptedOfferId
               );
-              const worker = acceptedOffer
-                ? getUserById(acceptedOffer.workerId)
-                : undefined;
+              const worker = acceptedOffer?.worker ?? null;
               if (!worker || !acceptedOffer) return null;
               return (
                 <div

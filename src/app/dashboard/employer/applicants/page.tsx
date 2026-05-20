@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { StarDisplay } from "@/components/ui/StarRating";
 import { useAuth, useJobs, useChat } from "@/context";
-import { getUserById } from "@/data/users";
 import { formatCOP, formatCOPShort, timeAgo } from "@/lib/format";
 
 const statusConfig = {
@@ -91,7 +90,7 @@ export default function EmployerApplicantsPage() {
 
                   <div className="flex flex-col gap-3">
                     {jobOffers.map((offer) => {
-                      const worker = getUserById(offer.workerId);
+                      const worker = offer.worker ?? null;
                       if (!worker) return null;
                       const s = statusConfig[offer.status];
                       const isPending = offer.status === "pending" || offer.status === "negotiating";
@@ -190,7 +189,7 @@ export default function EmployerApplicantsPage() {
                     .filter((o) => !employerJobs.some((j) => j.id === o.jobId))
                     .map((offer) => {
                       const job = jobs.find((j) => j.id === offer.jobId);
-                      const worker = getUserById(offer.workerId);
+                      const worker = offer.worker ?? null;
                       if (!worker) return null;
                       const s = statusConfig[offer.status];
 

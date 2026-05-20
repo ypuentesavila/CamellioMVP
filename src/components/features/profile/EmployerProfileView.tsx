@@ -19,7 +19,6 @@ import { JobCard } from "@/components/features/jobs/JobCard";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { useJobs } from "@/context";
 import { useAuth } from "@/context";
-import { getUserById } from "@/data/users";
 import type { User } from "@/types";
 
 interface EmployerProfileViewProps {
@@ -277,23 +276,20 @@ export function EmployerProfileView({ user }: EmployerProfileViewProps) {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {reviewsGiven.map((review) => {
-                const target = getUserById(review.targetId);
-                return (
-                  <ReviewCard
-                    key={review.id}
-                    rating={review.rating}
-                    comment={review.comment}
-                    createdAt={review.createdAt}
-                    authorName={user.name}
-                    authorRole="employer"
-                    jobTitle={
-                      jobs.find((j) => j.id === review.jobId)?.title
-                    }
-                    verified={profile.verified}
-                  />
-                );
-              })}
+              {reviewsGiven.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  rating={review.rating}
+                  comment={review.comment}
+                  createdAt={review.createdAt}
+                  authorName={user.name}
+                  authorRole="employer"
+                  jobTitle={
+                    jobs.find((j) => j.id === review.jobId)?.title
+                  }
+                  verified={profile.verified}
+                />
+              ))}
             </div>
           )}
         </section>

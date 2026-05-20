@@ -21,7 +21,6 @@ import { ReviewCard } from "@/components/features/reviews/ReviewCard";
 import { ReviewSummary } from "@/components/features/reviews/ReviewSummary";
 import { useJobs } from "@/context";
 import { useAuth } from "@/context";
-import { getUserById } from "@/data/users";
 import { formatCOP } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types";
@@ -291,20 +290,17 @@ export function WorkerProfileView({ user }: WorkerProfileViewProps) {
                 <p className="text-sm text-stone-400">Aún no hay reseñas</p>
               </div>
             ) : (
-              reviews.map((review) => {
-                const author = getUserById(review.authorId);
-                return (
-                  <ReviewCard
-                    key={review.id}
-                    rating={review.rating}
-                    comment={review.comment}
-                    createdAt={review.createdAt}
-                    authorName={author?.name ?? "Empleador"}
-                    authorRole="employer"
-                    verified
-                  />
-                );
-              })
+              reviews.map((review) => (
+                <ReviewCard
+                  key={review.id}
+                  rating={review.rating}
+                  comment={review.comment}
+                  createdAt={review.createdAt}
+                  authorName="Empleador"
+                  authorRole="employer"
+                  verified
+                />
+              ))
             )}
           </div>
         </section>
