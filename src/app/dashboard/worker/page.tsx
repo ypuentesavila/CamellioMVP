@@ -258,7 +258,7 @@ export default function WorkerDashboardPage() {
                       Ver detalles
                     </Button>
                   </Link>
-                  <Link href={`/mensajes/${job.chatId}`}>
+                  <Link href={job.chatId ? `/mensajes/${job.chatId}` : "/mensajes"}>
                     <Button variant="ghost" size="sm">
                       <MessageSquare className="w-4 h-4" />
                       Chat
@@ -367,7 +367,7 @@ export default function WorkerDashboardPage() {
         <SectionHeader
           title="Mis reseñas"
           count={workerReviews.length}
-          action={{ label: "Ver todas", href: "/perfil/u1" }}
+          action={{ label: "Ver perfil", href: `/perfil/${workerId}` }}
         />
         <div className="flex flex-col gap-3">
           {/* Aggregate summary */}
