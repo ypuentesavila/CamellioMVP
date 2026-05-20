@@ -71,7 +71,7 @@ const offerStatusConfig = {
 
 export default function WorkerDashboardPage() {
   const { user } = useAuth();
-  const { jobs, offers, getReviewsByWorker, getWorkerRating } = useJobs();
+  const { jobs, offers, getReviewsByWorker, getWorkerRating, getJobById } = useJobs();
   const loading = useSimulatedLoading(1300);
 
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -88,8 +88,23 @@ export default function WorkerDashboardPage() {
     ? offers.filter((o) => o.workerId === user.id)
     : [];
 
-  // Real reviews from context (fall back to demo worker u1)
-  const workerId = user?.id ?? "u1";
+  const activeJobs = workerOffers
+    .filter((o) => o.status === "accepted")
+    .map((o) => {
+      const job = getJobById(o.jobId);
+      return {
+        id: o.id,
+        jobId: o.jobId,
+        title: job?.title ?? o.jobId,
+        employer: job?.employerId ?? "",
+        location: job?.location ?? "",
+        agreedPrice: o.counterOfferPrice ?? o.proposedPrice,
+        chatId: null as string | null,
+      };
+    });
+
+  // Real reviews from context
+  const workerId = user?.id ?? "";
   const workerReviews = getReviewsByWorker(workerId);
   const { average: liveRating, count: liveReviewCount } = getWorkerRating(workerId);
 

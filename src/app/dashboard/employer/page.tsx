@@ -190,10 +190,37 @@ function StarRow({ rating }: { rating: number }) {
 
 export default function EmployerDashboardPage() {
   const { user } = useAuth();
-  const { jobs, getReviewsByJob, getReviewsByWorker, hasReviewed, offers } = useJobs();
+  const { jobs, getReviewsByJob, getReviewsByWorker, hasReviewed, offers, acceptOffer, rejectOffer, getJobById } = useJobs();
 
-  // Real jobs from context typed as Job[] — fixes TS2339 on acceptedOfferId / updatedAt
   const publishedJobs = jobs.filter((j) => j.employerId === (user?.id ?? ""));
+  const myOffers = offers.filter((o) => o.employerId === (user?.id ?? ""));
+  const acceptedOffers = myOffers.filter((o) => o.status === "accepted");
+
+  const applicants = myOffers.map((o) => ({
+    id: o.id,
+    jobId: o.jobId,
+    jobTitle: getJobById(o.jobId)?.title ?? o.jobId,
+    workerName: o.worker?.name ?? o.workerId,
+    workerCategory: o.worker?.workerProfile?.category ?? "",
+    workerRating: o.worker?.workerProfile?.rating ?? 0,
+    workerReviews: o.worker?.workerProfile?.reviewCount ?? 0,
+    proposedPrice: o.proposedPrice,
+    counterOfferPrice: o.counterOfferPrice,
+    status: o.status,
+    message: o.message,
+    createdAt: o.createdAt,
+  }));
+
+  const activeHires = acceptedOffers.map((o) => ({
+    id: o.id,
+    jobId: o.jobId,
+    jobTitle: getJobById(o.jobId)?.title ?? o.jobId,
+    workerName: o.worker?.name ?? o.workerId,
+    workerCategory: o.worker?.workerProfile?.category ?? "",
+    workerRating: o.worker?.workerProfile?.rating ?? 0,
+    agreedPrice: o.counterOfferPrice ?? o.proposedPrice,
+    chatId: null as string | null,
+  }));
 
   // ReviewModal state: { jobId, jobTitle, offerId, targetId, targetName }
   const [reviewTarget, setReviewTarget] = useState<{
@@ -456,24 +483,24 @@ export default function EmployerDashboardPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 pt-3 border-t border-stone-200">
-                  {app.status === "pending" && (
-                    <Button variant="primary" size="sm" className="flex-1">
+                  {(app.status === "pending" || app.status === "negotiating") && (
+                    <Button variant="primary" size="sm" className="flex-1" onClick={() => acceptOffer(app.id)}>
                       <CheckCircle className="w-4 h-4" />
-                      Contratar
+                      {app.status === "negotiating"
+                        ? `Aceptar ${formatCOPShort(app.counterOfferPrice!)}`
+                        : "Contratar"}
                     </Button>
                   )}
-                  {app.status === "negotiating" && (
-                    <Button variant="primary" size="sm" className="flex-1">
-                      <CheckCircle className="w-4 h-4" />
-                      Aceptar ${formatCOPShort(app.counterOfferPrice!)}
+                  {(app.status === "pending" || app.status === "negotiating") && (
+                    <Button variant="outline" size="sm" onClick={() => rejectOffer(app.id)}>
+                      Rechazar
                     </Button>
                   )}
-                  <Button variant="outline" size="sm">
-                    Ver perfil
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <MessageSquare className="w-4 h-4" />
-                  </Button>
+                  <Link href={`/perfil/${myOffers.find((o) => o.id === app.id)?.workerId ?? ""}`}>
+                    <Button variant="ghost" size="sm">
+                      Ver perfil
+                    </Button>
+                  </Link>
                 </div>
               </div>
             );

@@ -159,11 +159,11 @@ export function JobProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const acceptOffer = useCallback(async (offerId: string) => {
-    const offer = await api.post<Offer>(`/offers/${offerId}/accept`, {});
-    const jobId = offers.find((o) => o.id === offerId)?.jobId ?? offer.jobId;
+    await api.post<{ success: boolean }>(`/offers/${offerId}/accept`, {});
+    const jobId = offers.find((o) => o.id === offerId)?.jobId ?? "";
     setOffers((prev) =>
       prev.map((o) => {
-        if (o.id === offerId) return offer;
+        if (o.id === offerId) return { ...o, status: 'accepted' as OfferStatus };
         if (o.jobId === jobId && o.id !== offerId)
           return { ...o, status: 'rejected' as OfferStatus };
         return o;
@@ -179,21 +179,26 @@ export function JobProvider({ children }: { children: React.ReactNode }) {
   }, [offers]);
 
   const rejectOffer = useCallback(async (offerId: string) => {
-    const offer = await api.post<Offer>(`/offers/${offerId}/reject`, {});
-    setOffers((prev) => prev.map((o) => (o.id === offerId ? offer : o)));
+    await api.post<{ success: boolean }>(`/offers/${offerId}/reject`, {});
+    setOffers((prev) =>
+      prev.map((o) => (o.id === offerId ? { ...o, status: 'rejected' as OfferStatus } : o))
+    );
   }, []);
 
   const withdrawOffer = useCallback(async (offerId: string) => {
-    const offer = await api.post<Offer>(`/offers/${offerId}/withdraw`, {});
-    setOffers((prev) => prev.map((o) => (o.id === offerId ? offer : o)));
+    await api.post<{ success: boolean }>(`/offers/${offerId}/withdraw`, {});
+    const jobId = offers.find((o) => o.id === offerId)?.jobId ?? "";
+    setOffers((prev) =>
+      prev.map((o) => (o.id === offerId ? { ...o, status: 'withdrawn' as OfferStatus } : o))
+    );
     setJobs((prev) =>
       prev.map((j) =>
-        j.id === offer.jobId
+        j.id === jobId
           ? { ...j, offerCount: Math.max(0, j.offerCount - 1) }
           : j
       )
     );
-  }, []);
+  }, [offers]);
 
   const counterOffer = useCallback(
     async (offerId: string, price: number, note: string) => {

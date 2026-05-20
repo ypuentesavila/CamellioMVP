@@ -1,4 +1,5 @@
 import type { Timestamp } from "./common";
+import type { User } from "./user";
 
 export type OfferStatus =
   | "pending"
@@ -21,4 +22,5 @@ export interface Offer {
   negotiationRound: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  worker?: Pick<User, "id" | "name" | "avatar" | "location" | "workerProfile">;
 }
